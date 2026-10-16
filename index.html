@@ -1986,8 +1986,7 @@
     var SB_URL='https://nbhkndetjaytevyzqsuh.supabase.co';
     var SB_KEY='sb_publishable_sT4OYqX5_H-GMiWWoDbpzQ_kSGEk8OD';
     var SB_FALLBACK_NAMES=['Adrian Morocho','Andrew Aldaz','Angel Acosta','Brandon Horton','Esteban Santana','Gage Bracey','Hector Lima','Jim Horton','Jose Vallejo','Josh Renfroe','Michelle Horton','Patricia Kasday','Juan Cristosomo','Miguel Frias','Luis Espinal','Luis Sinchi','Mauricio Valladares'];
-    var SB_ADMINS=['Jim Horton','Josh Renfroe','Michelle Horton','Patricia Kasday'];
-    var sbSession=null,sbMyEvents=null,sbRecorded={},sbFlushing=false,sbLoadingProgress=false,sbNamesCache=null,sbTeamEvents=null,sbLoadingTeam=false,mpName=null,mpMode='enter',sbLeaderboardRows=null,sbLoadingLeaderboard=false;
+    var sbSession=null,sbMyEvents=null,sbRecorded={},sbFlushing=false,sbLoadingProgress=false,sbNamesCache=null,mpName=null,mpMode='enter',sbLeaderboardRows=null,sbLoadingLeaderboard=false;
     function sbStore(key,value){try{if(value===null)localStorage.removeItem(key);else localStorage.setItem(key,JSON.stringify(value))}catch(e){}}
     function sbRead(key){try{var v=localStorage.getItem(key);return v?JSON.parse(v):null}catch(e){return null}}
     sbSession=sbRead('qpfg_session');
@@ -2071,7 +2070,7 @@
       meta.textContent='Signed in as '+sbSession.name+' · '+c.lessons+' of '+sbTotalLessons()+' lessons done';
     }
     function sbSignOut(){
-      sbSession=null;sbMyEvents=null;sbRecorded={};sbTeamEvents=null;mpName=null;sbLeaderboardRows=null;
+      sbSession=null;sbMyEvents=null;sbRecorded={};mpName=null;sbLeaderboardRows=null;
       sbStore('qpfg_session',null);
       updateProgressCard();
       renderMyProgress();
@@ -2089,7 +2088,7 @@
         }
         sbSession={name:name,token:token};
         sbStore('qpfg_session',sbSession);
-        sbMyEvents=null;sbRecorded={};sbTeamEvents=null;
+        sbMyEvents=null;sbRecorded={};
         updateProgressCard();
         sbFlushQueue();
         renderMyProgress();
@@ -2181,7 +2180,6 @@
         panel.appendChild(loading);
         sbLoadMyProgress();
         renderLeaderboardSection();
-        if(SB_ADMINS.indexOf(sbSession.name)>-1)renderTeamProgress(panel);
         return;
       }
       var c=sbCounts(sbMyEvents);
@@ -2208,41 +2206,6 @@
       addList('Inspections completed',unique(byKind.inspection),function(r){return r.item_label||r.item_key});
       addList('Quizzes',byKind.quiz.slice().reverse(),function(r){var s=sbDetailScore(r.detail);var when=sbRowDate(r);return 'Training Quiz'+(s?' — '+s:'')+(when?' · '+sbFormatDate(when):'')});
       renderLeaderboardSection();
-      if(SB_ADMINS.indexOf(sbSession.name)>-1)renderTeamProgress(panel);
-    }
-    function renderTeamProgress(afterPanel){
-      var section=document.createElement('section');section.className='practice-panel';
-      var meta=document.createElement('p');meta.className='practice-meta';meta.textContent='OFFICE VIEW';
-      var heading=document.createElement('h3');heading.className='practice-title';heading.textContent='Team Progress';
-      section.append(meta,heading);
-      docList.appendChild(section);
-      if(sbTeamEvents){buildTeamTable(section,sbTeamEvents);return}
-      var loading=document.createElement('p');loading.className='practice-note';loading.textContent='Loading team progress…';
-      section.appendChild(loading);
-      if(sbLoadingTeam)return;
-      sbLoadingTeam=true;
-      sbRpc('admin_progress',{p_token:sbSession.token}).then(function(rows){
-        sbLoadingTeam=false;
-        sbTeamEvents=Array.isArray(rows)?rows:[];
-        if(currentView==='My Progress'&&sbSession)renderMyProgress();
-      },function(){
-        sbLoadingTeam=false;
-        if(loading.isConnected)loading.textContent='Team progress couldn’t load — check your connection and reopen this page.';
-      });
-    }
-    function buildTeamTable(section,rows){
-      var byName={};
-      (sbNamesCache||SB_FALLBACK_NAMES).forEach(function(n){byName[n]=[]});
-      rows.forEach(function(r){var n=sbRowName(r);if(!n)return;if(!byName[n])byName[n]=[];byName[n].push(r)});
-      var names=Object.keys(byName).sort();
-      if(!names.length){var none=document.createElement('p');none.className='practice-note';none.textContent='No progress recorded yet.';section.appendChild(none);return}
-      names.forEach(function(n){
-        var c=sbCounts(byName[n]);
-        var row=document.createElement('div');row.className='mp-team-row';
-        var name=document.createElement('strong');name.textContent=n;
-        var counts=document.createElement('span');counts.textContent=c.lessons+' lessons · '+c.quizzes+' quizzes · '+c.checklists+' checklists · '+c.inspections+' inspections';
-        row.append(name,counts);section.appendChild(row);
-      });
     }
     function renderLeaderboardSection(){
       var panel=document.createElement('section');panel.className='practice-panel';
