@@ -1,6 +1,6 @@
 // Technician Field Guide — offline service worker
 // Bump VERSION whenever the app content changes so phones pick up the new build.
-const VERSION = 'field-guide-v8';
+const VERSION = 'field-guide-v9';
 const CORE = [
   './',
   './index.html',
@@ -17,7 +17,7 @@ self.addEventListener('install', (event) => {
       .then((cache) => cache.addAll(CORE))
       .then(() => self.skipWaiting())
   );
-});
+});9
 
 
 self.addEventListener('activate', (event) => {
