@@ -416,10 +416,6 @@
     .lb-list{display:grid;gap:8px;margin-top:14px}
     .lb-row{display:flex;align-items:center;gap:13px;padding:12px 13px;background:var(--surface-2);border:1px solid transparent;border-radius:10px}
     .lb-rank{width:36px;height:36px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--surface);color:var(--muted);font-family:"Barlow Condensed",sans-serif;font-size:1.3rem;font-weight:700;line-height:1}
-    .lb-row.gold{background:var(--gold-soft)}.lb-row.gold .lb-rank{background:var(--gold);color:#fff}
-    .lb-row.silver{background:var(--silver-soft)}.lb-row.silver .lb-rank{background:var(--silver);color:#fff}
-    .lb-row.bronze{background:var(--bronze-soft)}.lb-row.bronze .lb-rank{background:var(--bronze);color:#fff}
-    @media(prefers-color-scheme:dark){.lb-row.gold .lb-rank,.lb-row.silver .lb-rank,.lb-row.bronze .lb-rank{color:#141414}}
     .lb-row.you{border-color:var(--red)}
     .lb-main{flex:1;min-width:0}
     .lb-name{display:block;font-weight:700;font-size:1.05rem;line-height:1.3}
@@ -2275,10 +2271,12 @@
       var list=document.createElement('div');list.className='lb-list';
       sorted.forEach(function(r,i){
         var name=sbRowName(r);
-        var row=document.createElement('div');row.className='lb-row'+(i===0?' gold':i===1?' silver':i===2?' bronze':'')+(sbSession&&name===sbSession.name?' you':'');
+        var row=document.createElement('div');row.className='lb-row'+(sbSession&&name===sbSession.name?' you':'');
         var rank=document.createElement('span');rank.className='lb-rank';rank.textContent=String(i+1);rank.setAttribute('aria-label','Rank '+(i+1));
         var main=document.createElement('div');main.className='lb-main';
-        var nameEl=document.createElement('span');nameEl.className='lb-name';nameEl.textContent=name;
+        var nameEl=document.createElement('span');nameEl.className='lb-name';
+        if(i===0){var trophy=document.createElement('span');trophy.className='lb-trophy';trophy.textContent='🏆 ';trophy.setAttribute('role','img');trophy.setAttribute('aria-label','First place');nameEl.appendChild(trophy)}
+        nameEl.appendChild(document.createTextNode(name));
         if(sbSession&&name===sbSession.name){var you=document.createElement('span');you.className='lb-you';you.textContent=' (You)';nameEl.appendChild(you)}
         var brk=document.createElement('span');brk.className='lb-break';brk.textContent='Lessons '+(Number(r.lessons)||0)+' · Quizzes '+(Number(r.quizzes)||0)+' · Checklists '+(Number(r.checklists)||0)+' · Inspections '+(Number(r.inspections)||0);
         main.append(nameEl,brk);
