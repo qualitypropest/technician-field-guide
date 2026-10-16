@@ -13,10 +13,10 @@
       color-scheme:light dark;
       --bg:#f4f5f6;--surface:#ffffff;--surface-2:#eceff1;--ink:#151719;--muted:#5b6065;
       --line:#d7dadd;--header:#0d0f10;--red:#c51220;--red-dark:#9f0f19;--red-soft:#f9e8ea;
-      --pest:#c51220;--wild:#266154;--green:#247a4f;--green-soft:#e5f4eb;--mark:#ffe59a;--focus:#e11d2e;--shadow:0 8px 24px rgba(17,20,23,.08);
+      --pest:#c51220;--wild:#266154;--green:#247a4f;--green-soft:#e5f4eb;--mark:#ffe59a;--focus:#e11d2e;--shadow:0 8px 24px rgba(17,20,23,.08);--gold:#a97b06;--gold-soft:#f8ecc8;--silver:#5d686f;--silver-soft:#e7ebed;--bronze:#96582a;--bronze-soft:#f5e3cf;
     }
     @media(prefers-color-scheme:dark){
-      :root{--bg:#101214;--surface:#191c1f;--surface-2:#23272b;--ink:#f5f6f7;--muted:#b9bec3;--line:#353a3f;--header:#060708;--red:#ef3340;--red-dark:#ff4b57;--red-soft:#3a171b;--pest:#ef3340;--wild:#68bca8;--green:#55bd85;--green-soft:#173a28;--mark:#735f15;--focus:#ff5863;--shadow:0 10px 28px rgba(0,0,0,.28)}
+      :root{--bg:#101214;--surface:#191c1f;--surface-2:#23272b;--ink:#f5f6f7;--muted:#b9bec3;--line:#353a3f;--header:#060708;--red:#ef3340;--red-dark:#ff4b57;--red-soft:#3a171b;--pest:#ef3340;--wild:#68bca8;--green:#55bd85;--green-soft:#173a28;--mark:#735f15;--focus:#ff5863;--shadow:0 10px 28px rgba(0,0,0,.28);--gold:#e0b13e;--gold-soft:#3a2f0e;--silver:#c6ced4;--silver-soft:#2b3034;--bronze:#d18a4f;--bronze-soft:#38240f}
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
@@ -268,6 +268,10 @@
     .training-check{padding:13px 0;border-top:1px solid var(--line)}
     .training-check:first-of-type{border-top:0;padding-top:2px}
     .training-check p{margin:0;line-height:1.55}
+    .training-check .practice-options{margin-top:10px}
+    .check-feedback{font-weight:700}
+    .check-feedback:empty{display:none}
+    .check-feedback.bad{margin-top:10px;color:var(--red)}
     .training-next{display:block;width:100%;margin-top:20px}
     .practice-panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:clamp(17px,4vw,26px)}
     .practice-meta{margin:0 0 7px;color:var(--red);font-weight:700}
@@ -408,6 +412,22 @@
     .mp-team-row{display:flex;flex-direction:column;gap:1px;padding:11px 0;border-top:1px solid var(--line)}
     .mp-team-row strong{font-size:1.02rem}
     .mp-team-row span{color:var(--muted);font-size:.92rem}
+    .progress-entry{display:grid;gap:10px}
+    .lb-list{display:grid;gap:8px;margin-top:14px}
+    .lb-row{display:flex;align-items:center;gap:13px;padding:12px 13px;background:var(--surface-2);border:1px solid transparent;border-radius:10px}
+    .lb-rank{width:36px;height:36px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--surface);color:var(--muted);font-family:"Barlow Condensed",sans-serif;font-size:1.3rem;font-weight:700;line-height:1}
+    .lb-row.gold{background:var(--gold-soft)}.lb-row.gold .lb-rank{background:var(--gold);color:#fff}
+    .lb-row.silver{background:var(--silver-soft)}.lb-row.silver .lb-rank{background:var(--silver);color:#fff}
+    .lb-row.bronze{background:var(--bronze-soft)}.lb-row.bronze .lb-rank{background:var(--bronze);color:#fff}
+    @media(prefers-color-scheme:dark){.lb-row.gold .lb-rank,.lb-row.silver .lb-rank,.lb-row.bronze .lb-rank{color:#141414}}
+    .lb-row.you{border-color:var(--red)}
+    .lb-main{flex:1;min-width:0}
+    .lb-name{display:block;font-weight:700;font-size:1.05rem;line-height:1.3}
+    .lb-you{color:var(--red)}
+    .lb-break{display:block;color:var(--muted);font-size:.9rem;margin-top:1px}
+    .lb-total-wrap{flex:0 0 auto;text-align:right}
+    .lb-total{display:block;font-family:"Barlow Condensed",sans-serif;font-size:1.6rem;font-weight:700;line-height:1;color:var(--red)}
+    .lb-total-label{display:block;font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--muted);margin-top:2px}
     .lesson-done{display:inline-flex;color:var(--green)}
     .lesson-done svg{width:20px;height:20px}
   </style>
@@ -448,16 +468,15 @@
         <div id="results" class="results"></div>
       </section>
 
-      <section class="progress-entry" aria-label="My progress">
+      <section class="progress-entry" aria-label="Sign in">
         <button class="progress-card" type="button" id="myProgressCard">
           <span class="category-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M9 5h6M9 3h6v4H9z"></path><path d="M9 5H6.5A1.5 1.5 0 0 0 5 6.5v13A1.5 1.5 0 0 0 6.5 21h11A1.5 1.5 0 0 0 19 19.5v-13A1.5 1.5 0 0 0 17.5 5H15"></path><path d="m8.5 14.5 2.2 2.2 4.8-5"></path></svg></span>
-          <span class="progress-card-copy"><strong>MY PROGRESS</strong><span id="myProgressMeta">Sign in to track your training</span></span>
+          <span class="progress-card-copy"><strong>SIGN IN</strong><span id="myProgressMeta">Sign in to track your training</span></span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
         </button>
       </section>
 
-      <section class="browse" aria-labelledby="browseHeading">
-        <div class="browse-head"><div><h2 id="browseHeading">BROWSE</h2><p>Choose a field guide category</p></div></div>
+      <section class="browse">
         <div class="category-grid">
           <button class="category-card" type="button" data-open-category="Inspections">
             <span class="category-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M9 5h6M9 3h6v4H9z"></path><path d="M9 5H6.5A1.5 1.5 0 0 0 5 6.5v13A1.5 1.5 0 0 0 6.5 21h7"></path><circle cx="16.5" cy="15.5" r="3.5"></circle><path d="m19 18 2 2M8.5 10h5M8.5 14h3"></path></svg></span>
@@ -740,10 +759,10 @@
           'Plan coverage: all three are Silver and up — the plans list both Roaches and Water Bugs from Silver.',
           'Escalate: recurring sewer-line activity on American roaches (coordinate with plumbing) · multi-unit or daytime German roach activity (full kitchen pull-out service) · heavy Oriental populations in a crawlspace (sub-area service).'
         ],check:[
-          {q:'Where do American cockroaches commonly originate?',a:'Sewers.'},
-          {q:'Daytime German cockroach activity indicates what?',a:'A heavy infestation.'},
-          {q:'What pest do customers usually call a “water bug”?',a:'The Oriental cockroach.'},
-          {q:'Which plan tier covers roaches?',a:'Silver and up — roaches (and “water bugs”) are on the Silver coverage list.'}
+          {q:'Where do American cockroaches commonly originate?',a:'Sewers.',wrong:['Crawlspaces.','Tree holes.','Roof voids.']},
+          {q:'Daytime German cockroach activity indicates what?',a:'A heavy infestation.',wrong:['That they have come in from the sewers.','A musty odor in garages and basements.','That they are living in the drains and water meter boxes.']},
+          {q:'What pest do customers usually call a “water bug”?',a:'The Oriental cockroach.',wrong:['The American cockroach.','The German cockroach.','The large reddish-brown one that flies to porch lights.']},
+          {q:'Which plan tier covers roaches?',a:'Silver and up — roaches (and “water bugs”) are on the Silver coverage list.',wrong:['Gold and up — roaches start on the Gold coverage list.','Platinum only.','No plan — roaches are a specialty service.']}
         ]},
         {title:'Ants: Argentine, Odorous House & Carpenter',intro:'The three ant calls you will run most. Each has a field test in the Pest ID guides — a smell, a pile of frass, a trail that shows up after rain — and each sits on a different plan tier.',facts:[
           'Argentine ants: long trails along edges and on counters near sweets; activity surges after irrigation or rain. They nest in mulch beds, under stones and pots, and in wall voids near plumbing.',
@@ -752,10 +771,10 @@
           'Plan coverage: Argentine and odorous house ants are Gold and up — the plans list “Ants (small)” from Gold. Carpenter ants are Platinum only.',
           'Escalate: multiple satellite Argentine colonies inside walls (deep interior service) · budding odorous house colonies (repellent sprays scatter them) · carpenter ant structural damage (recommend an inspection report).'
         ],check:[
-          {q:'What smell confirms odorous house ants?',a:'Rotten coconut smell.'},
-          {q:'What weather event triggers Argentine ant trails indoors?',a:'Watering or rain.'},
-          {q:'What does carpenter ant frass look like?',a:'Sawdust.'},
-          {q:'A Silver customer has carpenter ants. Covered?',a:'No — carpenter ants are Platinum only, so for a Silver customer that is a separate service, and a natural upgrade conversation.'}
+          {q:'What smell confirms odorous house ants?',a:'Rotten coconut smell.',wrong:['Frass piled up like sawdust.','Rustling inside the walls.','Trails that surge after rain.']},
+          {q:'What weather event triggers Argentine ant trails indoors?',a:'Watering or rain.',wrong:['Nightfall, when they forage after dark.','A stretch of hot, dry days.','Moisture-damaged wood nearby.']},
+          {q:'What does carpenter ant frass look like?',a:'Sawdust.',wrong:['Fine dust, like powdered sugar.','Wet, dark soil crumbs.','Shredded paper fibers.']},
+          {q:'A Silver customer has carpenter ants. Covered?',a:'No — carpenter ants are Platinum only, so for a Silver customer that is a separate service, and a natural upgrade conversation.',wrong:['Yes — carpenter ants are on the Silver coverage list with the other ants.','Covered at Gold — they would only need to move up one tier.','Yes, but only as a one-time service.']}
         ]},
         {title:'Biting pests: Bed Bugs, Fleas, Ticks & Mosquitoes',intro:'Four biters, four very different coverage answers. Learn the signs from the Pest ID guides cold — and learn which of these a plan actually pays for.',facts:[
           'Bed bugs: linear bites, blood spots on sheets, black fecal specks on seams. They hide in mattress seams, box springs, headboards, and outlet plates. Most introductions come from travel. Escalate always — bed bugs require a specialized protocol.',
@@ -765,11 +784,11 @@
           'Ticks: found on a pet or a person after time in the yard. They wait for hosts in tall grass and leaf litter — questing. Not covered — specialty service, though plan discounts apply.',
           'Mosquitoes: larvae (“wrigglers”) in standing water, bites at dusk, swarms near vegetation. They breed in standing water and rest in dense, shaded vegetation. Not covered — specialty service, plan discounts apply.'
         ],check:[
-          {q:'What is the most common origin of bed bug introductions?',a:'Travel.'},
-          {q:'What product class breaks the flea life cycle?',a:'IGR — insect growth regulator.'},
-          {q:'Where do ticks wait for hosts?',a:'Tall grass and leaf litter (questing).'},
-          {q:'What do mosquitoes need to breed?',a:'Standing water.'},
-          {q:'Which of these four is covered on Silver: bed bugs, fleas, ticks, mosquitoes?',a:'None of them. Fleas are Platinum only; the other three are specialty services not covered by a plan.'}
+          {q:'What is the most common origin of bed bug introductions?',a:'Travel.',wrong:['Pets bringing them in from the yard.','Standing water near the home.','Tall grass and leaf litter.']},
+          {q:'What product class breaks the flea life cycle?',a:'IGR — insect growth regulator.',wrong:['Adulticide sprays alone.','Repellent treatments.','Trapping and exclusion.']},
+          {q:'Where do ticks wait for hosts?',a:'Tall grass and leaf litter (questing).',wrong:['In standing water, as wrigglers.','In mattress seams and box springs.','At carpet edges and in pet bedding.']},
+          {q:'What do mosquitoes need to breed?',a:'Standing water.',wrong:['Tall grass and leaf litter.','Pet bedding and carpet edges.','Mattress seams and headboards.']},
+          {q:'Which of these four is covered on Silver: bed bugs, fleas, ticks, mosquitoes?',a:'None of them. Fleas are Platinum only; the other three are specialty services not covered by a plan.',wrong:['Fleas — they are covered from Silver up.','Ticks and mosquitoes — both are covered on Silver.','All four are covered on Silver.']}
         ]},
         {title:'Occasional invaders: Spiders, Camelback Crickets, Earwigs & Silverfish',intro:'The damp-basement and garage crowd. All four are Silver and up, and all four are really moisture and harborage stories.',facts:[
           'Spiders: tangle webs in corners, garages, window frames, and eaves — and webs reappear days after cleaning. Exterior and porch lights attract them at night. Service is dewebbing plus a perimeter residual, and treating the eaves and soffits.',
@@ -780,10 +799,10 @@
           'Silverfish: silvery teardrop body, damage to paper and cardboard, found in tubs and stored boxes. They thrive in high humidity and damp conditions — attics, bathrooms, storage boxes.',
           'Plan coverage: spiders, camelback crickets, earwigs, and silverfish are all Silver and up.'
         ],check:[
-          {q:'A customer swears a camelback cricket is a spider. What gives it away as an insect?',a:'6 legs and long antennae — spiders have 8 legs and no antennae.'},
-          {q:'What attracts earwigs to a structure?',a:'Moisture.'},
-          {q:'What conditions do silverfish thrive in?',a:'High humidity / damp conditions.'},
-          {q:'What attracts spiders to porches at night?',a:'Exterior/porch lights.'}
+          {q:'A customer swears a camelback cricket is a spider. What gives it away as an insect?',a:'6 legs and long antennae — spiders have 8 legs and no antennae.',wrong:['8 legs and no antennae.','Its wings — spiders never have wings.','The chirping sound it makes at night.']},
+          {q:'What attracts earwigs to a structure?',a:'Moisture.',wrong:['Porch lights at night.','Paper and cardboard in storage.','Dry, undisturbed storage areas.']},
+          {q:'What conditions do silverfish thrive in?',a:'High humidity / damp conditions.',wrong:['Dry conditions in sunny areas.','Cold, well-ventilated spaces.','Mulch beds and leaf litter outdoors.']},
+          {q:'What attracts spiders to porches at night?',a:'Exterior/porch lights.',wrong:['Moisture around the foundation.','Paper and cardboard in storage.','Damp, dark, undisturbed corners.']}
         ]},
         {title:'Fabric & pantry pests: Clothes Moths & Pantry Pests',intro:'Two “moth” calls that are not the same job. One lives in the closet and is never covered by a plan; the other lives in the pantry and starts at Gold.',facts:[
           'Clothes moths: two species — the webbing clothes moth (the most common) and the casemaking clothes moth. Adults are tiny, about 1/4 inch, pale gold/buff with shiny, narrow wings; the webbing species has a tuft of reddish-golden hairs on its head. They are weak fliers that avoid light.',
@@ -795,10 +814,10 @@
           'Pantry pests: webbing in flour and grains, small moths flying in the kitchen, beetles in dry goods. They hide on pantry shelves, in pet food bags, and in bird seed. The first step is always to identify the source product; infested items get discarded.',
           'Pantry pests are Gold and up — the plans list Pantry Beetles plus Indian Meal Moths and Weevils from Gold.'
         ],check:[
-          {q:'Which clothes moth species is most common?',a:'The webbing clothes moth.'},
-          {q:'Who does the damage on a clothes moth job — the adult or the larva?',a:'The larva. Adults do not feed at all.'},
-          {q:'First step in pantry pest service?',a:'Identify the source product.'},
-          {q:'Are clothes moths covered on Platinum?',a:'No — clothes moths are not covered under any plan; they are a specialty service.'}
+          {q:'Which clothes moth species is most common?',a:'The webbing clothes moth.',wrong:['The casemaking clothes moth.','The Indian meal moth.','The carpet beetle.']},
+          {q:'Who does the damage on a clothes moth job — the adult or the larva?',a:'The larva. Adults do not feed at all.',wrong:['The adult. Larvae only spin the webbing.','Both — adults and larvae feed on fabric.','Neither — the damage comes from their droppings.']},
+          {q:'First step in pantry pest service?',a:'Identify the source product.',wrong:['Discard the infested items.','Treat the pantry shelves and pet food bags.','Check the closets for the source.']},
+          {q:'Are clothes moths covered on Platinum?',a:'No — clothes moths are not covered under any plan; they are a specialty service.',wrong:['Yes — Platinum covers clothes moths.','Yes — they start at Gold, with pantry pests.','Covered on Silver and up.']}
         ]},
         {title:'Small flies: Fruit Flies & Fungus Gnats',intro:'Two tiny flies that get mixed up constantly. The Pest ID guides separate them by color, eyes, wings, and — most usefully — by where they breed.',facts:[
           'Fruit flies: about 1/8 inch long, tan to brownish-yellow with darker banding on the abdomen, and bright red eyes. Larvae are tiny cream-colored maggots in fermenting material.',
@@ -810,10 +829,10 @@
           'The source is almost always something fermenting or staying wet — it needs to be removed, not just sprayed.',
           'Plan coverage: fruit flies and fungus gnats are both Silver and up.'
         ],check:[
-          {q:'How fast can fruit flies complete their life cycle in warm conditions?',a:'As short as 8–10 days.'},
-          {q:'What wing marking identifies a fungus gnat?',a:'A Y-shaped vein in each wing.'},
-          {q:'Tiny dark flies are hovering over a customer’s houseplants. First place you check?',a:'The potting soil — overwatered houseplants are the classic fungus gnat source.'},
-          {q:'Tan body, red eyes, hovering over the fruit bowl — fruit fly or fungus gnat?',a:'Fruit fly.'}
+          {q:'How fast can fruit flies complete their life cycle in warm conditions?',a:'As short as 8–10 days.',wrong:['As short as 3–4 days.','About 2–3 weeks.','About 30 days.']},
+          {q:'What wing marking identifies a fungus gnat?',a:'A Y-shaped vein in each wing.',wrong:['A dark band across each wing.','Fuzzy, moth-like wings.','No marking — they are identified by their red eyes.']},
+          {q:'Tiny dark flies are hovering over a customer’s houseplants. First place you check?',a:'The potting soil — overwatered houseplants are the classic fungus gnat source.',wrong:['The drains — check the sink and floor drains first.','The fruit bowl and stored produce.','The garbage and recycling bins.']},
+          {q:'Tan body, red eyes, hovering over the fruit bowl — fruit fly or fungus gnat?',a:'Fruit fly.',wrong:['Fungus gnat.','Drain fly.','Phorid fly.']}
         ]},
         {title:'Bees & wasps, rodents & termites',intro:'Three high-stakes IDs. Get these right and the coverage answer — and the safety call — usually makes itself.',facts:[
           'Bees/wasps: signs are visible nests under eaves, ground holes (yellowjackets), and high activity at trash. They nest in eaves, attics, wall voids, and ground burrows. The Pest ID guide shows seven common types: honey bees, mud dauber wasps, bald-faced hornets, digger bees, cicada killer wasps, yellow jackets, and European hornets.',
@@ -824,10 +843,10 @@
           'Subterranean termites: the hallmark sign is mud tubes on the foundation, plus swarmers near windows in spring and hollow-sounding wood. They work from soil-contact wood, crawlspace beams, and foundation cracks.',
           'Termites are not covered — specialty service. Platinum includes an annual termite inspection on request. Escalate always: refer to the termite division, document with photos, and do not disturb the tubes.'
         ],check:[
-          {q:'Best time of day to treat wasp nests?',a:'Dusk.'},
-          {q:'What is the smallest gap a mouse can squeeze through?',a:'A dime-sized gap.'},
-          {q:'What is a hallmark sign of subterranean termites?',a:'Mud tubes.'},
-          {q:'A Gold customer asks if the wasp nest on their eave, 15 feet up, is covered.',a:'Yes — Gold covers wasp nests on the structure up to 20 feet.'}
+          {q:'Best time of day to treat wasp nests?',a:'Dusk.',wrong:['Midday, when the nest is most active.','First thing in the morning.','Right after sunrise.']},
+          {q:'What is the smallest gap a mouse can squeeze through?',a:'A dime-sized gap.',wrong:['A quarter-sized gap.','A nickel-sized gap.','A golf-ball-sized hole.']},
+          {q:'What is a hallmark sign of subterranean termites?',a:'Mud tubes.',wrong:['Droppings, rub marks, and gnawing.','Visible nests under the eaves.','Scratching sounds at night.']},
+          {q:'A Gold customer asks if the wasp nest on their eave, 15 feet up, is covered.',a:'Yes — Gold covers wasp nests on the structure up to 20 feet.',wrong:['No — Gold only covers nests up to 10 feet.','No — wasp nests are Platinum only.','Yes, but only ground nests like yellowjacket burrows.']}
         ]}
       ]},
       {title:'Safety First',source:'Built from the Safety reminders',lessons:[
@@ -837,28 +856,28 @@
           'SDS ACCESS: the SDS for every product must be available in your truck and digitally.',
           'RESPIRATOR USE: use the right cartridge. Fit-tested. Replace per schedule.'
         ],check:[
-          {q:'A customer asks for a use the label doesn’t mention. What do you do?',a:'You don’t do it. If it’s not on the label, you don’t do it — period.'},
-          {q:'Where must product SDSs be available?',a:'In your truck and digitally — for every product you carry.'},
-          {q:'What are the three respirator rules?',a:'Use the right cartridge, be fit-tested, and replace cartridges per schedule.'},
-          {q:'What is the standard PPE on every job?',a:'Eye protection, gloves, long sleeves, and closed-toe boots — plus a respirator when the label requires one.'}
+          {q:'A customer asks for a use the label doesn’t mention. What do you do?',a:'You don’t do it. If it’s not on the label, you don’t do it — period.',wrong:['You can do it if the customer signs off on it.','You can do it once, as long as you document it.','Ask the customer to check the SDS first.']},
+          {q:'Where must product SDSs be available?',a:'In your truck and digitally — for every product you carry.',wrong:['At the office only.','In the SDS binder at the shop, available on request.','Only digitally, on your phone.']},
+          {q:'What are the three respirator rules?',a:'Use the right cartridge, be fit-tested, and replace cartridges per schedule.',wrong:['Use any cartridge, be fit-tested, and replace cartridges yearly.','Use the right cartridge, replace cartridges when breathing feels hard, no fit test needed.','Use the right cartridge, be fit-tested, and replace cartridges only when one is damaged.']},
+          {q:'What is the standard PPE on every job?',a:'Eye protection, gloves, long sleeves, and closed-toe boots — plus a respirator when the label requires one.',wrong:['Eye protection, gloves, short sleeves, and work boots.','Eye protection, gloves, long sleeves, and closed-toe boots — plus a respirator on every job.','Gloves and a respirator on every job, regardless of the label.']}
         ]},
         {title:'On site: spills, people & property',intro:'Three Safety reminders cover how you leave a property — and what you do when something goes wrong on it.',facts:[
           'SPILL RESPONSE: Contain → absorb → bag → report. Never wash a spill into storm drains.',
           'CUSTOMER & PET SAFETY: confirm pets are secured. Verify re-entry intervals before leaving.',
           'LOCK GATES / SECURE PROPERTY: leave the property as you found it. Double-check gates.'
         ],check:[
-          {q:'Walk through a spill response, in order.',a:'Contain, absorb, bag, report — and never wash it into a storm drain.'},
-          {q:'What two things do you confirm for customer and pet safety before leaving?',a:'That pets are secured, and the re-entry interval for what you applied.'},
-          {q:'What is the gate rule?',a:'Leave the property as you found it — and double-check the gates.'}
+          {q:'Walk through a spill response, in order.',a:'Contain, absorb, bag, report — and never wash it into a storm drain.',wrong:['Absorb, contain, bag, report.','Report, contain, absorb, bag.','Contain, absorb, report, bag.']},
+          {q:'What two things do you confirm for customer and pet safety before leaving?',a:'That pets are secured, and the re-entry interval for what you applied.',wrong:['That gates are double-checked, and the property is left as you found it.','That pets are let back inside, and the re-entry interval.','That pets are secured, and the gates are checked.']},
+          {q:'What is the gate rule?',a:'Leave the property as you found it — and double-check the gates.',wrong:['Leave the gates open so pets can get back in.','Only the front gate needs checking before you leave.','Report any open gate to the office and leave it as it is.']}
         ]},
         {title:'Protect yourself: heat, exposure & stop-work',intro:'The last three Safety reminders are about your own body — and your authority to walk away from an unsafe job.',facts:[
           'HEAT ILLNESS PREVENTION: water, rest, shade. Watch for cramps, dizziness, and confusion. Report immediately.',
           'REPORT EXPOSURE IMMEDIATELY: any exposure — wash, document, and report to your supervisor the same day.',
           'STOP WORK IF UNSAFE: you always have the right to stop. Call your supervisor.'
         ],check:[
-          {q:'What warning signs of heat illness do you watch for?',a:'Cramps, dizziness, and confusion.'},
-          {q:'You get product on your skin mid-job. What happens next?',a:'Wash, document, and report it to your supervisor the same day.'},
-          {q:'A job turns unsafe. What are your rights?',a:'You always have the right to stop work — stop, and call your supervisor.'}
+          {q:'What warning signs of heat illness do you watch for?',a:'Cramps, dizziness, and confusion.',wrong:['Dizziness, confusion, and a dry mouth only.','Cramps, a fever, and chills.','Sweating, hunger, and thirst.']},
+          {q:'You get product on your skin mid-job. What happens next?',a:'Wash, document, and report it to your supervisor the same day.',wrong:['Finish the job first, then wash up at the shop.','Wash it off and keep working — there is no need to report it.','Document it and report it at the end of the week.']},
+          {q:'A job turns unsafe. What are your rights?',a:'You always have the right to stop work — stop, and call your supervisor.',wrong:['You must finish the job, then report the hazard.','You can stop only after your supervisor approves it.','You can stop, but only for heat illness.']}
         ]}
       ]},
       {title:'Know Your Plans',source:'Built from the Pest Control Plans',lessons:[
@@ -867,28 +886,28 @@
           'Silver customers get a 10% discount on specialty services not included in any plan — such as Tick & Mosquito, Clothes Moths, Stink Bug/Overwintering Pests, and Termite services.',
           'What Silver does not have: ants, wasp nests, fleas, and pantry pests. When a Silver customer has one of those, it is a separate service — or an upgrade conversation.'
         ],check:[
-          {q:'Name five pests covered on Silver.',a:'Any five of: mice, rats, spiders, camel back crickets, roaches, water bugs, silverfish, centipedes, millipedes, pill bugs, sow bugs, earwigs.'},
-          {q:'What specialty discount does Silver carry?',a:'10% off specialty services not included in any plan.'},
-          {q:'A Silver customer finds small ants trailing in the kitchen. Covered?',a:'No — ants (small) start at Gold. That is a separate service or an upgrade conversation.'}
+          {q:'Name five pests covered on Silver.',a:'Any five of: mice, rats, spiders, camel back crickets, roaches, water bugs, silverfish, centipedes, millipedes, pill bugs, sow bugs, earwigs.',wrong:['Mice, rats, spiders, ants, and earwigs.','Roaches, water bugs, fleas, silverfish, and spiders.','Spiders, earwigs, pantry pests, mice, and rats.']},
+          {q:'What specialty discount does Silver carry?',a:'10% off specialty services not included in any plan.',wrong:['15% off specialty services not included in any plan.','20% off specialty services not included in any plan.','10% off all services, including the covered ones.']},
+          {q:'A Silver customer finds small ants trailing in the kitchen. Covered?',a:'No — ants (small) start at Gold. That is a separate service or an upgrade conversation.',wrong:['Yes — small ants are on the Silver list.','Yes — ants are covered on every plan.','No — ants are not covered on any plan.']}
         ]},
         {title:'Gold — adds ants, wasps & pantry pests',intro:'Gold is Silver plus the five additions customers ask about most: ants, wasps, and the pantry group.',facts:[
           'Gold covers everything on Silver, plus: Ants (small) · Wasp nests on structure up to 20 feet (including Paper Wasps, Yellow Jackets, European Hornets, Bald-Faced Hornets) · Pantry Beetles · Springtails · Indian Meal Moths and Weevils.',
           'Gold customers get a 15% discount on specialty services not included in any plan — such as Tick & Mosquito, Stink Bug/Overwintering Pests, Clothes Moths, and Termite services.',
           'Still not covered on Gold: fleas, carpenter ants, and carpenter bees — those are Platinum.'
         ],check:[
-          {q:'What does Gold add over Silver?',a:'Ants (small), wasp nests on the structure up to 20 feet, pantry beetles, springtails, and Indian meal moths and weevils.'},
-          {q:'How high does Gold’s wasp coverage reach?',a:'Wasp nests on the structure up to 20 feet.'},
-          {q:'What is Gold’s discount on specialty services?',a:'15%.'},
-          {q:'A Gold customer has fleas. Covered?',a:'No — fleas are Platinum only.'}
+          {q:'What does Gold add over Silver?',a:'Ants (small), wasp nests on the structure up to 20 feet, pantry beetles, springtails, and Indian meal moths and weevils.',wrong:['Fleas, carpenter ants, and carpenter bees.','Ants (small), wasp nests on the structure, and fleas.','Nothing — Gold has the same pest list as Silver, just a bigger discount.']},
+          {q:'How high does Gold’s wasp coverage reach?',a:'Wasp nests on the structure up to 20 feet.',wrong:['Wasp nests on the structure up to 10 feet.','Wasp nests on the structure up to 30 feet.','Any wasp nest at any height, including the roofline.']},
+          {q:'What is Gold’s discount on specialty services?',a:'15%.',wrong:['10%.','20%.','25%.']},
+          {q:'A Gold customer has fleas. Covered?',a:'No — fleas are Platinum only.',wrong:['Yes — fleas start at Gold.','Yes — fleas are covered on every plan.','No — fleas are not covered on any plan.']}
         ]},
         {title:'Platinum — the full-coverage tier',intro:'Platinum adds the expensive problems: fleas, carpenter pests, overwintering pests, and a termite inspection.',facts:[
           'Platinum covers everything on Gold, plus: Fleas · Carpenter Ants · Carpenter Bees · Carpet Beetles · Clover Mites · Stink Bug/Overwintering Pests · Annual termite inspection (upon request).',
           'Platinum customers get a 20% discount on specialty services not included in any plan — such as Tick & Mosquito and Termite services.',
           'Even on Platinum, some work stays specialty: bed bugs, termite treatment, tick and mosquito service, and clothes moths are not covered under any plan.'
         ],check:[
-          {q:'What does Platinum add over Gold?',a:'Fleas, carpenter ants, carpenter bees, carpet beetles, clover mites, stink bug/overwintering pests, and an annual termite inspection on request.'},
-          {q:'What is Platinum’s discount on specialty services?',a:'20%.'},
-          {q:'A Platinum customer asks for their termite inspection. Covered?',a:'Yes — Platinum includes an annual termite inspection upon request. Termite treatment itself is still a specialty service.'}
+          {q:'What does Platinum add over Gold?',a:'Fleas, carpenter ants, carpenter bees, carpet beetles, clover mites, stink bug/overwintering pests, and an annual termite inspection on request.',wrong:['Bed bugs, termite treatment, and tick and mosquito service.','Fleas, carpenter ants, and a bed bug treatment.','Only the annual termite inspection — the pest list is the same as Gold.']},
+          {q:'What is Platinum’s discount on specialty services?',a:'20%.',wrong:['10%.','15%.','25%.']},
+          {q:'A Platinum customer asks for their termite inspection. Covered?',a:'Yes — Platinum includes an annual termite inspection upon request. Termite treatment itself is still a specialty service.',wrong:['No — termite inspections are never covered.','Yes — and the termite treatment is included too.','Yes, but only every other year, on request.']}
         ]},
         {title:'Answering “is it covered?” — and spotting the upgrade',intro:'Most coverage questions in the field are answered by matching the pest to the plan. The Pest ID coverage lines and the plan lists agree — use them.',facts:[
           'Silver and up: mice, rats, roaches (including water bugs), spiders, camelback crickets, silverfish, earwigs, fungus gnats, fruit flies.',
@@ -897,10 +916,10 @@
           'Not covered on any plan — specialty services: bed bugs, subterranean termites, ticks, mosquitoes, clothes moths. The plan discounts (Silver 10% · Gold 15% · Platinum 20%) apply to specialty services not included in any plan.',
           'Upgrade moments: a Silver customer with ants in the kitchen or a wasp nest on the structure (Gold), fleas or carpenter ants (Platinum), or stink bugs pouring out of the walls every spring (Platinum covers Stink Bug/Overwintering Pests).'
         ],check:[
-          {q:'Which tier covers odorous house ants?',a:'Gold and up.'},
-          {q:'A Gold customer gets ticks in the yard every spring. What do you tell them?',a:'Tick service is not covered under any plan — it is a specialty service, and Gold gives them 15% off it.'},
-          {q:'Name three pests that are Platinum only.',a:'Fleas, carpenter ants, and carpenter bees (also carpet beetles, clover mites, stink bug/overwintering pests).'},
-          {q:'A Silver customer has a yellowjacket nest in the eave at 15 feet. What are their options?',a:'A one-time wasp service, or upgrading to Gold — Gold covers wasp nests on the structure up to 20 feet.'}
+          {q:'Which tier covers odorous house ants?',a:'Gold and up.',wrong:['Silver and up.','Platinum only.','No plan — it is a specialty service.']},
+          {q:'A Gold customer gets ticks in the yard every spring. What do you tell them?',a:'Tick service is not covered under any plan — it is a specialty service, and Gold gives them 15% off it.',wrong:['Ticks are covered on Gold — book the service under the plan.','Tick service is a specialty service, and Gold gives them 10% off it.','Upgrade to Platinum — Platinum covers tick service.']},
+          {q:'Name three pests that are Platinum only.',a:'Fleas, carpenter ants, and carpenter bees (also carpet beetles, clover mites, stink bug/overwintering pests).',wrong:['Fleas, carpenter ants, and bed bugs.','Ants (small), pantry pests, and wasps.','Mice, rats, and roaches.']},
+          {q:'A Silver customer has a yellowjacket nest in the eave at 15 feet. What are their options?',a:'A one-time wasp service, or upgrading to Gold — Gold covers wasp nests on the structure up to 20 feet.',wrong:['It is covered — wasp nests start on Silver.','A one-time wasp service, or upgrading to Platinum — wasps are Platinum only.','Nothing — wasp work is never covered by a plan.']}
         ]}
       ]},
       {title:'Pest Control SOPs',source:'Built from the Pest Control SOPs',lessons:[
@@ -915,11 +934,11 @@
           'Voles are rodents; moles are not. Voles eat plants — surface runways in the turf, clean round holes, gnawed bark at the base of shrubs and young trees. Moles eat grubs and earthworms — raised tunnel ridges and soil mounds. Rodent bait does nothing to a mole, so confirm which animal you have before quoting.',
           'A vole has a blunt nose, small eyes, ears nearly buried in fur, and a tail shorter than its body. A house mouse has large ears, a pointed nose, and a tail as long as its body — and activity inside the structure is a mouse, not a vole. Route it to the 4-Visit Rodent Service.'
         ],check:[
-          {q:'How many visits, in what window?',a:'Four visits inside 30 days.'},
-          {q:'What exclusion is included in the 4-visit service?',a:'Sealing 1–2 definite rodent-sized entry points, up to 2 inches in diameter, down low on the exterior.'},
-          {q:'What two conversations must happen at Visit 3?',a:'The second exclusion ask, and the station-retention (plan) conversation — both documented before you leave.'},
-          {q:'Raised tunnel ridges and soil mounds in the lawn — vole or mole?',a:'Mole. It eats grubs and earthworms, and rodent bait does nothing to it.'},
-          {q:'At Visit 4, what is every device reconciled against?',a:'The Visit 1 device map.'}
+          {q:'How many visits, in what window?',a:'Four visits inside 30 days.',wrong:['Four visits inside 60 days.','Three visits inside 30 days.','Five visits inside 30 days.']},
+          {q:'What exclusion is included in the 4-visit service?',a:'Sealing 1–2 definite rodent-sized entry points, up to 2 inches in diameter, down low on the exterior.',wrong:['Sealing every entry point found, including the roofline.','Sealing 1–2 entry points up to 4 inches across, anywhere on the structure.','No exclusion is included — it is always quoted separately.']},
+          {q:'What two conversations must happen at Visit 3?',a:'The second exclusion ask, and the station-retention (plan) conversation — both documented before you leave.',wrong:['The first exclusion ask, and the device reconciliation.','The station-retention conversation, and the final handoff to the office.','The exclusion conversation only — the station talk waits until Visit 4.']},
+          {q:'Raised tunnel ridges and soil mounds in the lawn — vole or mole?',a:'Mole. It eats grubs and earthworms, and rodent bait does nothing to it.',wrong:['Vole. It eats plants, and rodent bait will take care of it.','Vole — raised ridges are how voles surface-run through turf.','A house mouse working the lawn from the foundation.']},
+          {q:'At Visit 4, what is every device reconciled against?',a:'The Visit 1 device map.',wrong:['The customer’s service ticket from Visit 1.','The Visit 2 exclusion notes.','The product label for each device.']}
         ]},
         {title:'Ant Control: bait or direct treatment',intro:'The Ant Control SOP governs every ant job with one decision: some ants you eliminate by feeding them; others by treating where they live. The wrong method makes the problem worse.',facts:[
           'Small ants in kitchens = BAIT. Large ants or outdoor nesters = DIRECT TREATMENT. If identification is uncertain, bait — it will not worsen a knockdown species, but a repellent spray can permanently worsen a budding one.',
@@ -932,10 +951,10 @@
           'Knockdown kills only what we hit — with direct treatment, control depends on hitting the source. Address the exterior source on every job.',
           'Document: species and protocol with the reason for the choice · bait type, product, number and exact location of placements · nest location and areas treated · photos of trails, nests, and conducive conditions · instructions given to the customer.'
         ],check:[
-          {q:'Small ants trailing in a kitchen — bait or direct treatment?',a:'Bait. Small kitchen ants are fed, not sprayed.'},
-          {q:'Why not spray Argentine ants?',a:'They are a multi-queen, budding species — spraying splits the colony and spreads the problem.'},
-          {q:'On a bait job, activity goes up on day 3. Is something wrong?',a:'No — an increase at 2–5 days is normal and means they are feeding. The colony declines at 5–10 days, with the majority eliminated at 10–14 days.'},
-          {q:'What ruins a bait job faster than anything?',a:'Spraying or cleaning over the placements — it stops the feeding and restarts the entire process.'}
+          {q:'Small ants trailing in a kitchen — bait or direct treatment?',a:'Bait. Small kitchen ants are fed, not sprayed.',wrong:['Direct treatment — spray the trails and entry points.','Direct treatment — dust the wall voids behind the kitchen.','Either — the two methods are interchangeable for small ants.']},
+          {q:'Why not spray Argentine ants?',a:'They are a multi-queen, budding species — spraying splits the colony and spreads the problem.',wrong:['They have a single queen deep in the nest that sprays cannot reach.','Spraying works, but only with a repellent product.','Argentine ants cannot be sprayed because they nest only in mulch beds.']},
+          {q:'On a bait job, activity goes up on day 3. Is something wrong?',a:'No — an increase at 2–5 days is normal and means they are feeding. The colony declines at 5–10 days, with the majority eliminated at 10–14 days.',wrong:['Yes — activity should drop within 24 hours of baiting.','Yes — rising activity means the bait is repelling them; switch to a spray.','No — but the colony will not decline for 30 days or more.']},
+          {q:'What ruins a bait job faster than anything?',a:'Spraying or cleaning over the placements — it stops the feeding and restarts the entire process.',wrong:['Placing many small placements instead of a few large ones.','Using Advion, which only works in certain seasons.','Reapplying bait after it has been consumed or dried out.']}
         ]},
         {title:'Cockroach Control',intro:'The Cockroaches SOP: identify the species first — it decides the entire job. German cockroaches and the outdoor species are opposite problems.',facts:[
           'German cockroaches breed indoors and are eliminated with bait, an IGR, and sanitation across repeat visits. The outdoor species — American, Oriental, smokybrown — come in from outside, drains, or sewers, and are handled as an exclusion and moisture problem. Treating one like the other fails.',
@@ -950,10 +969,10 @@
           'The two-visit service: Visit 1 verifies prep, inspects, places monitors, then baits, dusts, and applies IGR. Visit 2 reads and records monitor counts, replaces consumed bait, extends placements toward the highest counts, and reassesses sanitation. Judge the outcome on monitor counts, not sightings.',
           'In multi-unit buildings, German cockroaches move between units — a single-unit treatment rarely holds, and the scope conversation belongs before the work, not after.'
         ],check:[
-          {q:'Why does species ID decide the whole roach job?',a:'German roaches breed indoors and need bait, an IGR, and sanitation over repeat visits; the outdoor species are an exclusion and moisture problem. Treating one like the other fails.'},
-          {q:'What is the most common reason a roach bait job underperforms?',a:'A repellent product applied over or near the bait — it keeps roaches from feeding on it.'},
-          {q:'How do you judge whether a roach job is working?',a:'Counts on the numbered sticky monitors across the two visits — not customer sightings.'},
-          {q:'A customer has been fogging their kitchen. Your move?',a:'Tell them to stop — foggers scatter German cockroaches. The job runs on bait, void dust, and an IGR.'}
+          {q:'Why does species ID decide the whole roach job?',a:'German roaches breed indoors and need bait, an IGR, and sanitation over repeat visits; the outdoor species are an exclusion and moisture problem. Treating one like the other fails.',wrong:['German roaches are an exclusion and moisture problem; the outdoor species need bait, an IGR, and sanitation indoors. Treating one like the other fails.','Species does not matter — every roach job runs the same bait program.','Only the outdoor species breed indoors, so ID changes nothing about the treatment.']},
+          {q:'What is the most common reason a roach bait job underperforms?',a:'A repellent product applied over or near the bait — it keeps roaches from feeding on it.',wrong:['Too many small bait placements instead of a few large ones.','Placing the sticky monitors before treating.','The customer vacuuming heavy accumulations before baiting.']},
+          {q:'How do you judge whether a roach job is working?',a:'Counts on the numbered sticky monitors across the two visits — not customer sightings.',wrong:['Customer sightings — “I still see some” tells you what you need.','The musty odor getting weaker between visits.','How much bait was consumed by Visit 1.']},
+          {q:'A customer has been fogging their kitchen. Your move?',a:'Tell them to stop — foggers scatter German cockroaches. The job runs on bait, void dust, and an IGR.',wrong:['Tell them to keep fogging between visits to help the bait work.','Tell them to fog once more, right before Visit 1.','Swap their fogger for a repellent spray applied over the bait.']}
         ]},
         {title:'Bed Bugs',intro:'The Bed Bugs SOP governs the job with two rules: confirm physical evidence before treating — and never clear a job on the absence of bites.',facts:[
           'Bed bugs are eliminated by repeat visits on a fixed interval, not by a single service. Anything sold as one visit will fail. Preparation is part of the treatment: an unprepared unit is rescheduled, not treated.',
@@ -971,11 +990,11 @@
           'Clearing the job: re-treat the full area at each visit — spot-treating only where bugs were seen misses where they have moved. Declare the job clear only after the required consecutive clear inspections, on evidence: interceptor counts and visual inspection. The customer’s report of bites is not evidence either way.',
           'Tell the customer to keep sleeping in the same bed. If they move to the couch or a spare room, the bugs follow — and now there are two infestations instead of one.'
         ],check:[
-          {q:'A customer reports bites, but you find no bugs, no spotting, no skins. Treat?',a:'No. Bites are not diagnostic. Place monitors and schedule a re-inspection.'},
-          {q:'Where does the great majority of an infestation sit?',a:'Within a few feet of the sleeping surface — start at the bed and work outward.'},
-          {q:'The unit is unprepared on service day. What do you do?',a:'Do not treat. Document what is missing and reschedule — or reduce scope with Service Manager approval.'},
-          {q:'What do you clear a bed bug job on?',a:'Interceptor counts, visual inspection, and consecutive clear visits — never on “no bites.”'},
-          {q:'Why must infested furniture stay put during prep?',a:'Moving furniture and belongings into other rooms is the single most common way an infestation spreads.'}
+          {q:'A customer reports bites, but you find no bugs, no spotting, no skins. Treat?',a:'No. Bites are not diagnostic. Place monitors and schedule a re-inspection.',wrong:['Yes — reported bites are enough to start treatment.','Yes — treat just the bed, as a precaution.','No — tell the customer to call back only if they catch one, and close the ticket.']},
+          {q:'Where does the great majority of an infestation sit?',a:'Within a few feet of the sleeping surface — start at the bed and work outward.',wrong:['In outlet plates and picture frames throughout the room.','Spread evenly across every room in the home.','In the couch and recliner — the bed is rarely the problem.']},
+          {q:'The unit is unprepared on service day. What do you do?',a:'Do not treat. Document what is missing and reschedule — or reduce scope with Service Manager approval.',wrong:['Treat anyway — a partial treatment is better than none.','Treat only the bed, and note that the unit was unprepared.','Cancel the job and close the account.']},
+          {q:'What do you clear a bed bug job on?',a:'Interceptor counts, visual inspection, and consecutive clear visits — never on “no bites.”',wrong:['The customer reporting no new bites for a week.','A single clear inspection after the last treatment.','Steam and encasements being in place at the final visit.']},
+          {q:'Why must infested furniture stay put during prep?',a:'Moving furniture and belongings into other rooms is the single most common way an infestation spreads.',wrong:['Furniture moved into another room cannot be steamed or treated there.','The bugs die off if furniture is moved into a sunny room.','Moving furniture is fine as long as each piece is bagged first.']}
         ]},
         {title:'Fleas',intro:'The Fleas SOP: the animal and the environment must be treated at the same time. Treat one without the other and the job fails every time.',facts:[
           'Roughly 95% of a flea population is eggs, larvae, and pupae in carpet, bedding, and floor cracks — not adults on the pet. Confirm veterinary treatment is in place on every pet before the job is scheduled.',
@@ -991,10 +1010,10 @@
           'What to expect: adults present at service drop off in the first few days. Continued sightings for 2–3 weeks are normal — pupae are shielded in a cocoon nothing penetrates, and emergence is triggered by the vibration and warmth of normal household activity. That is why daily vacuuming is part of the treatment: it triggers emergence onto a treated surface.',
           'Plan coverage: fleas are included in the Platinum plan only. Silver and Gold accounts require a separate Flea Treatment.'
         ],check:[
-          {q:'What share of a flea population is adults on the pet?',a:'About 5%. The other 95% is eggs, larvae, and pupae in the environment.'},
-          {q:'How do you confirm flea dirt?',a:'The black specks turn rust-red on a damp white tissue — it is digested blood.'},
-          {q:'Why do customers still see fleas two to three weeks after a correct treatment?',a:'Pupae in cocoons are shielded from product and keep emerging onto treated surfaces. It is expected — not treatment failure.'},
-          {q:'A home has fleas but no pets. First move?',a:'Suspect a wildlife host in the crawlspace, attic, or void — route to a wildlife inspection before treating.'}
+          {q:'What share of a flea population is adults on the pet?',a:'About 5%. The other 95% is eggs, larvae, and pupae in the environment.',wrong:['About 50% — half on the pet, half in the environment.','About 95% — nearly all of them are adults on the pet.','About 25%.']},
+          {q:'How do you confirm flea dirt?',a:'The black specks turn rust-red on a damp white tissue — it is digested blood.',wrong:['The black specks turn green on a damp white tissue.','The black specks are just gritty soil tracked in from the yard.','The black specks dissolve in water with no color at all.']},
+          {q:'Why do customers still see fleas two to three weeks after a correct treatment?',a:'Pupae in cocoons are shielded from product and keep emerging onto treated surfaces. It is expected — not treatment failure.',wrong:['The IGR was skipped, so the cycle never broke.','The pet was never treated by the vet, so the job failed.','Adults keep blowing in from the lawn, where fleas thrive in open sun.']},
+          {q:'A home has fleas but no pets. First move?',a:'Suspect a wildlife host in the crawlspace, attic, or void — route to a wildlife inspection before treating.',wrong:['Treat the carpet and baseboards right away — the source does not matter.','Assume a previous owner’s pet left them, and just add an IGR.','Check for springtails around moisture before doing anything.']}
         ]},
         {title:'Moisture pests: camel crickets, springtails, flies & clover mites',intro:'Four SOPs, one theme: these pests are symptoms. Camel crickets, springtails, and clover mites point at moisture and habitat; flies point at whatever they bred in.',facts:[
           'Camel crickets and springtails are moisture pests, not infestation pests — a symptom of a damp condition somewhere on the property. Treatment alone knocks down what is present; without moisture correction the population returns, usually within the same season. Find the moisture before quoting the job.',
@@ -1010,10 +1029,10 @@
           'Clover mite treatment: exterior perimeter per label, focused on the foundation, sunny walls, siding, window frames, and entry points, plus the band of turf and vegetation adjacent to the foundation where labeled. Treat the sunny elevations first.',
           'Clover mites do not bite, do not damage the house, and do not get into food — the red mark when you squash one is pigment from the mite, not blood. A hot summer lull is not a resolution: say plainly that fall migration is likely without correction.'
         ],check:[
-          {q:'A basement is full of camel crickets. What must you find before quoting?',a:'The moisture source — standing water, condensation, a leak, or grading/mulch against the foundation. Without correcting it, the population returns.'},
-          {q:'Phorid flies in numbers at floor level, no food debris anywhere. What might that mean?',a:'A broken sewer or drain line beneath the slab — a plumbing problem presenting as a pest problem. Escalate.'},
-          {q:'Why doesn’t pouring bleach down a drain fix a drain fly problem?',a:'The breeding film is on the pipe walls above the water line. It has to be scrubbed mechanically and treated with a bio-foam or enzyme product.'},
-          {q:'Where do clover mites actually come from?',a:'The lawn — well-fertilized turf and dense vegetation against the foundation.'}
+          {q:'A basement is full of camel crickets. What must you find before quoting?',a:'The moisture source — standing water, condensation, a leak, or grading/mulch against the foundation. Without correcting it, the population returns.',wrong:['The nest — camel crickets nest in the basement like ants.','Which upstairs room they are entering from.','Nothing — treat the basement and quote the job.']},
+          {q:'Phorid flies in numbers at floor level, no food debris anywhere. What might that mean?',a:'A broken sewer or drain line beneath the slab — a plumbing problem presenting as a pest problem. Escalate.',wrong:['A fungus gnat problem in the houseplants.','A dead animal in a wall void or chimney.','Overwatered soil in the crawlspace.']},
+          {q:'Why doesn’t pouring bleach down a drain fix a drain fly problem?',a:'The breeding film is on the pipe walls above the water line. It has to be scrubbed mechanically and treated with a bio-foam or enzyme product.',wrong:['The film is below the water line, where bleach cannot reach it.','Bleach works only if it sits in the trap overnight.','Drain flies breed in the soil around the foundation, not in the drain.']},
+          {q:'Where do clover mites actually come from?',a:'The lawn — well-fertilized turf and dense vegetation against the foundation.',wrong:['Inside the house — they breed in wall voids.','Houseplants and potting soil indoors.','They are carried in on pets coming from the yard.']}
         ]},
         {title:'Fabric pests: clothes moths & carpet beetles',intro:'Two keratin feeders, two different jobs. The Clothes Moths SOP and the Carpet Beetles SOP both start the same way: confirm what you are actually looking at, because the treatment follows the species.',facts:[
           'Clothes moths: adult moths do not eat clothes. The larvae do all the damage, and they go after fabric soiled with sweat, body oils, and food stains — soiled items are attacked first. Cleaning and preparation are therefore part of the treatment, not a courtesy request. An unprepared home will not produce a result.',
@@ -1030,10 +1049,10 @@
           'The source is usually one of these: a bird or rodent nest in an attic, chimney, soffit, or wall void — the most common hidden source by far · dead insect accumulations in light fixtures, window channels, attics, and wall voids · stored wool, furs, feathers, taxidermy, or wool-blend carpet padding · pet hair and lint under and behind furniture, in vents, and along floor edges.',
           'Treatment: remove the source — that is the treatment. Vacuum thoroughly and dispose of the contents outside. Launder or dry-clean affected textiles. Targeted crack and crevice treatment along baseboards, carpet edges, and under tack strips, per label. Activity drops quickly once the source is removed; recurrence means the source was missed.'
         ],check:[
-          {q:'Webbing on the fabric, or shed skins and bristly larvae — which pest is which?',a:'Webbing = clothes moths. Shed skins and bristly larvae = carpet beetles. Confirm with a hand lens — the call changes the entire service.'},
-          {q:'When is the clothes moth second visit scheduled?',a:'21 days out — and it is booked before you leave the first visit.'},
-          {q:'A customer wants a firm clothes moth price before anyone has inspected. What is the policy?',a:'The inspection determines the final price — do not quote a firm number before inspecting.'},
-          {q:'Where is a carpet beetle source most often hiding?',a:'A bird or rodent nest in an attic, chimney, soffit, or wall void — the most common hidden source by far.'}
+          {q:'Webbing on the fabric, or shed skins and bristly larvae — which pest is which?',a:'Webbing = clothes moths. Shed skins and bristly larvae = carpet beetles. Confirm with a hand lens — the call changes the entire service.',wrong:['Webbing = carpet beetles. Shed skins and bristly larvae = clothes moths.','Both signs mean clothes moths — beetles leave no shed skins.','Both signs mean carpet beetles — moths leave no webbing.']},
+          {q:'When is the clothes moth second visit scheduled?',a:'21 days out — and it is booked before you leave the first visit.',wrong:['7 days out — booked before you leave.','14 days out — booked before you leave.','30 days out — the office books it later.']},
+          {q:'A customer wants a firm clothes moth price before anyone has inspected. What is the policy?',a:'The inspection determines the final price — do not quote a firm number before inspecting.',wrong:['Quote the standard flat rate from the Price List.','Quote a firm price, but add a preparation fee on top.','Quote the number, as long as the customer sent photos first.']},
+          {q:'Where is a carpet beetle source most often hiding?',a:'A bird or rodent nest in an attic, chimney, soffit, or wall void — the most common hidden source by far.',wrong:['In the carpet padding under the customer’s rug.','In dead insect accumulations in light fixtures.','In pet hair and lint built up behind the furniture.']}
         ]},
         {title:'Stinging insects & ground bees',intro:'The Stinging Insects SOP and the Ground Bees SOP share one rule: identify the nest before quoting and before treating. Social colonies and solitary insects are opposite jobs.',facts:[
           'Social colonies — yellowjackets, hornets, paper wasps — defend the nest and sting in numbers: treat at dawn or dusk, in a bee suit, with an escape path planned. Solitary insects — mud daubers, carpenter bees, digger bees, cicada killers — rarely sting and often need no treatment at all.',
@@ -1051,11 +1070,11 @@
           'Ground bee season runs spring through early summer and is self-limiting: activity declines once larvae are established, so late in the emergence period it is reasonable to explain that activity will taper on its own and recommend lawn correction instead — bare, dry, sandy soil is what attracts them, and dense turf is not usable habitat.',
           'Reassure the customer: solitary ground bees do not have a hive to defend and are not aggressive. The males cannot sting at all, and females only sting if actually grabbed.'
         ],check:[
-          {q:'A yellowjacket nest is in a structural void 25 feet up. Who takes the job?',a:'A wildlife/exclusion technician cleared for that ladder height, with a helper — never a solo tech up high on a stinging job.'},
-          {q:'Why never seal a void entry while the colony is alive?',a:'It drives the colony inward — they chew their way into the living space.'},
-          {q:'Many small holes in the lawn, no mounds. What are they, and what is the sting risk?',a:'Digger/miner bees — solitary and not aggressive; the males cannot sting at all. Treat concentrated clusters in problem areas only.'},
-          {q:'A customer wants the honeybee colony in their wall sprayed. First move?',a:'Stop and reassess. Honeybees are protected pollinators — the preferred outcome is extraction, vacuuming, and relocation, with comb removal quoted alongside.'},
-          {q:'What question do you ask before treating any stinging insect job?',a:'“Does anyone in the household have a known sting allergy?” — and you note the answer on the job.'}
+          {q:'A yellowjacket nest is in a structural void 25 feet up. Who takes the job?',a:'A wildlife/exclusion technician cleared for that ladder height, with a helper — never a solo tech up high on a stinging job.',wrong:['Any pest tech, working solo from a ladder.','The first available tech, at midday when the nest is quietest.','No one — void nests above 20 feet are always declined.']},
+          {q:'Why never seal a void entry while the colony is alive?',a:'It drives the colony inward — they chew their way into the living space.',wrong:['Sealing is fine, as long as you do it at dusk.','The sealant kills the colony quietly inside the void.','The colony will just chew a new exit to the outside.']},
+          {q:'Many small holes in the lawn, no mounds. What are they, and what is the sting risk?',a:'Digger/miner bees — solitary and not aggressive; the males cannot sting at all. Treat concentrated clusters in problem areas only.',wrong:['Cicada killer wasps — one hole with a soil mound each.','Ground-nesting yellowjackets — the dangerous one; treat the whole lawn.','Carpenter bees that have moved into the turf.']},
+          {q:'A customer wants the honeybee colony in their wall sprayed. First move?',a:'Stop and reassess. Honeybees are protected pollinators — the preferred outcome is extraction, vacuuming, and relocation, with comb removal quoted alongside.',wrong:['Spray it at dusk in a bee suit, like any other colony.','Seal the entry so the colony dies inside the wall.','Treat it, but skip the comb removal to keep the price down.']},
+          {q:'What question do you ask before treating any stinging insect job?',a:'“Does anyone in the household have a known sting allergy?” — and you note the answer on the job.',wrong:['“Can you send a photo of the insect and the nest?”','“Approximately how high is the activity?”','“Is the nest visible from outside?”']}
         ]},
         {title:'Ticks & mosquitoes',intro:'Two outdoor programs built on the same idea: treat where the pest actually lives. For ticks that is the edge; for mosquitoes it is the water.',facts:[
           'Ticks: treat the edge, not the lawn. Ticks dry out in open sunny turf and survive in leaf litter, tall grass, stone walls, and the shaded transition between lawn and woods. Most encounters happen within about ten feet of that edge.',
@@ -1077,11 +1096,11 @@
           'Mosquito assignment: pest control technicians may run mosquito spray in any month of the season for properties of 10,000 sq ft or less, and tick applications in spring and fall at that same size limit. Larger properties are assigned to the specialty tier.',
           'Plan discounts on Tick & Mosquito: Silver 10% · Gold 15% · Platinum 20%. Set the interval by product — botanical residual is materially shorter than synthetic, so schedule tighter or price accordingly, and make that trade-off explicit at the time of sale.'
         ],check:[
-          {q:'Where do you concentrate a tick application?',a:'The edge — the ten-foot band at the lawn–woodland transition, leaf litter, ground cover, and stone walls. Not the middle of the open lawn.'},
-          {q:'A customer says they have never seen a tick on the property, so they don’t need service. What stage are they missing?',a:'The nymph — poppy-seed sized, peaking in late spring and early summer, and almost never noticed.'},
-          {q:'Why scrub a dumped container instead of just emptying it?',a:'Mosquito eggs are cemented to the container walls and survive drying — scrubbing is what removes them.'},
-          {q:'A customer asks whether a tick bite needs treatment. Your answer?',a:'Refer them to their physician — every time. Technicians never give medical advice, and the conversation gets noted on the account.'},
-          {q:'How is tick pricing figured?',a:'By lawn square footage, measured with the Property Estimation Tool in GorillaDesk — never estimated by eye.'}
+          {q:'Where do you concentrate a tick application?',a:'The edge — the ten-foot band at the lawn–woodland transition, leaf litter, ground cover, and stone walls. Not the middle of the open lawn.',wrong:['The middle of the open lawn, where ticks dry out.','Evenly across the whole property, at the same rate everywhere.','Only the shaded ornamental beds against the house.']},
+          {q:'A customer says they have never seen a tick on the property, so they don’t need service. What stage are they missing?',a:'The nymph — poppy-seed sized, peaking in late spring and early summer, and almost never noticed.',wrong:['The adult — large, and most active in mid-winter.','The larva — the stage that quests out in open turf.','The egg mass — hidden in the lawn thatch.']},
+          {q:'Why scrub a dumped container instead of just emptying it?',a:'Mosquito eggs are cemented to the container walls and survive drying — scrubbing is what removes them.',wrong:['Emptying is enough — the eggs die as soon as the water is dumped.','Scrubbing removes leftover larvicide from the last treatment.','The eggs float on the surface and pour out with the water.']},
+          {q:'A customer asks whether a tick bite needs treatment. Your answer?',a:'Refer them to their physician — every time. Technicians never give medical advice, and the conversation gets noted on the account.',wrong:['Tell them most bites are harmless, and to watch it for a few days.','Advise them on the right way to remove a tick.','Tell them to get tested right away, just in case.']},
+          {q:'How is tick pricing figured?',a:'By lawn square footage, measured with the Property Estimation Tool in GorillaDesk — never estimated by eye.',wrong:['By eye, based on how the property looks from the truck.','A flat rate on every tick job, regardless of size.','By the total acreage, woods included.']}
         ]},
         {title:'Overwintering pests & spotted lanternfly',intro:'Two seasonal programs where honesty about limits is the whole job: one pest is already inside the walls before you arrive, the other flies in from the neighborhood no matter what you spray.',facts:[
           'Overwintering pests are already inside. They entered last fall and are emerging from walls and attics as temperatures rise, so nothing applied to the exterior in spring changes that. Spring service is reduction and control, not instant elimination — activity may continue for 2–4 weeks as more emerge. Set that expectation before the work, not after the first callback.',
@@ -1094,10 +1113,10 @@
           'Host tree management is the most durable intervention: removal or targeted control of tree of heaven, on the property and noted on adjoining land.',
           'Spotted lanternfly is a regulated invasive species, and state quarantine, reporting, and business-permit requirements change from season to season — confirm the current position before advising a customer, rather than working from last year’s rules.'
         ],check:[
-          {q:'It is April, and a customer wants the exterior sprayed to stop stink bugs coming out of the walls. What do you explain?',a:'They are already inside — they entered last fall. Spring is vacuum removal plus interior crack-and-crevice work; the service that actually solves it is fall prevention, mid-August through October.'},
-          {q:'What is the highest-value lanternfly work, and when is it done?',a:'Egg mass destruction, October through April — scraped into a sealed container of alcohol or hand sanitizer, never onto the ground.'},
-          {q:'What tree do you look for first on a lanternfly call?',a:'Tree of heaven — the preferred host and usually the population center.'},
-          {q:'Can you promise a customer a lanternfly-free property?',a:'No. We reduce pressure; adults fly in all season. Say so before the sale.'}
+          {q:'It is April, and a customer wants the exterior sprayed to stop stink bugs coming out of the walls. What do you explain?',a:'They are already inside — they entered last fall. Spring is vacuum removal plus interior crack-and-crevice work; the service that actually solves it is fall prevention, mid-August through October.',wrong:['Exterior spraying in spring will stop them — book the job.','They breed indoors all winter, so a full interior treatment is the fix.','Wait until summer, when an exterior residual can reach them in the walls.']},
+          {q:'What is the highest-value lanternfly work, and when is it done?',a:'Egg mass destruction, October through April — scraped into a sealed container of alcohol or hand sanitizer, never onto the ground.',wrong:['Egg mass destruction in mid-summer, scraped onto the ground.','Spraying the host trees in the spring.','Host tree removal in the fall.']},
+          {q:'What tree do you look for first on a lanternfly call?',a:'Tree of heaven — the preferred host and usually the population center.',wrong:['Grapevine.','Black walnut.','Maple.']},
+          {q:'Can you promise a customer a lanternfly-free property?',a:'No. We reduce pressure; adults fly in all season. Say so before the sale.',wrong:['Yes — a full-season program guarantees it.','Yes, once the tree of heaven is removed.','Yes, as long as egg masses are scraped every month.']}
         ]},
         {title:'Wood-destroying insects',intro:'The Wood-Destroying Insects SOP: confirm what you are looking at before you say anything to the customer — then remember that what is visible is a fraction of the damage.',facts:[
           'Getting the ID wrong is costly both ways: telling a customer they have termites when they have flying ants damages trust and can cost a sale; telling them they have ants when they have termites costs them a structure. Where identification is uncertain, collect a specimen and confirm before making any statement about what it is.',
@@ -1112,10 +1131,10 @@
           'Confirm before you quote: clean the frass away completely, mark existing exit holes, and schedule a recheck. Fresh frass or new holes confirm an active infestation. Emergence is seasonal, so a single visit may not settle the question — document what you observed and when, and set the recheck rather than guessing. Carry tape and a marker on every powderpost call.',
           'Address moisture first for anobiid infestations — vapor barrier, ventilation, and drainage corrections are part of the solution, not an add-on. Apply borate products to bare, unfinished wood where labeled. Adults may keep emerging from treated wood for months as they finish developing, so judge results across a full season, not weeks.'
         ],check:[
-          {q:'What distinguishes termite galleries from other wood-destroying insects?',a:'Soil or mud in the galleries. The others leave frass or clean galleries.'},
-          {q:'A customer asks how far the termite damage extends. What do you tell them?',a:'What is visible is a fraction of it — you report what you found and where, and a qualified contractor assesses whether the framing is sound. Never estimate the extent yourself.'},
-          {q:'Powderpost frass sits under a beam, but nothing looks fresh. Quote treatment?',a:'Not yet. Clean the frass away, mark the exit holes, and schedule a recheck — fresh frass or new holes confirm an active infestation.'},
-          {q:'Before any drilling or soil application on a termite job, what do you confirm?',a:'The location of wells, cisterns, water lines, and buried utilities — every time.'}
+          {q:'What distinguishes termite galleries from other wood-destroying insects?',a:'Soil or mud in the galleries. The others leave frass or clean galleries.',wrong:['Clean galleries with no debris at all.','Frass piled below the galleries.','Perfectly round exit holes in the wood.']},
+          {q:'A customer asks how far the termite damage extends. What do you tell them?',a:'What is visible is a fraction of it — you report what you found and where, and a qualified contractor assesses whether the framing is sound. Never estimate the extent yourself.',wrong:['Give them your best estimate based on the mud tubes you found.','Tell them the damage stops at the visible mud tubes.','Tell them swarmers on the windowsill mean the damage is minor.']},
+          {q:'Powderpost frass sits under a beam, but nothing looks fresh. Quote treatment?',a:'Not yet. Clean the frass away, mark the exit holes, and schedule a recheck — fresh frass or new holes confirm an active infestation.',wrong:['Yes — frass under a beam always means an active infestation.','Yes — treat now, and check for activity afterward.','No — old frass closes the job, with no follow-up needed.']},
+          {q:'Before any drilling or soil application on a termite job, what do you confirm?',a:'The location of wells, cisterns, water lines, and buried utilities — every time.',wrong:['The location of the mud tubes and swarmers.','That the customer has signed the preparation sheet.','The moisture readings around the water heater.']}
         ]}
       ]},
       {title:'Wildlife SOPs',source:'Built from the Wildlife SOPs',lessons:[
@@ -1135,11 +1154,11 @@
           'Any bite, scratch, or direct contact is reported to the Service Manager immediately and requires medical evaluation. If a bat is found in a living space where a person was sleeping — or where a child or impaired person was present — advise the customer to contact their local health department, and do not release or discard the bat.',
           'Hibernation sites are protected from disturbance from October through April.'
         ],check:[
-          {q:'A customer calls on June 15 with bats in the attic and wants them out this week. What happens?',a:'No exclusion — June 1 to August 1 is the maternity blackout. You may pre-seal 80–90% of secondary gaps, keep the primary exits fully open, and book the exclusion for the fall window with Service Manager confirmation.'},
-          {q:'What is the best exclusion window, and why?',a:'August 1 to October 31 — the young can fly and the entire colony leaves nightly.'},
-          {q:'Before a one-way device comes off, what must the weather have done?',a:'Stayed at 45°F or higher for three consecutive nights — proof the bats have been active and have actually left.'},
-          {q:'How small a gap can a bat get through?',a:'3/8 inch — which is why sealing has to be thorough, not approximate.'},
-          {q:'Who confirms a bat exclusion date before it is scheduled?',a:'The Service Manager — no exclusion is scheduled or performed without confirmation that the date falls inside an approved window.'}
+          {q:'A customer calls on June 15 with bats in the attic and wants them out this week. What happens?',a:'No exclusion — June 1 to August 1 is the maternity blackout. You may pre-seal 80–90% of secondary gaps, keep the primary exits fully open, and book the exclusion for the fall window with Service Manager confirmation.',wrong:['Yes — exclusion can go ahead in June, as long as one-way devices are used.','Yes — June is the best window, because the young can already fly.','No exclusion is ever allowed — bats must be left alone year-round.']},
+          {q:'What is the best exclusion window, and why?',a:'August 1 to October 31 — the young can fly and the entire colony leaves nightly.',wrong:['April 1 to May 31 — before the maternity colonies form.','November 1 to March 31 — while the bats are hibernating.','June 1 to August 1 — while the pups are in the roost.']},
+          {q:'Before a one-way device comes off, what must the weather have done?',a:'Stayed at 45°F or higher for three consecutive nights — proof the bats have been active and have actually left.',wrong:['Dropped below freezing for three consecutive nights.','Stayed above 45°F for one night.','Stayed dry for three consecutive days, at any temperature.']},
+          {q:'How small a gap can a bat get through?',a:'3/8 inch — which is why sealing has to be thorough, not approximate.',wrong:['1/2 inch.','1 inch.','2 inches.']},
+          {q:'Who confirms a bat exclusion date before it is scheduled?',a:'The Service Manager — no exclusion is scheduled or performed without confirmation that the date falls inside an approved window.',wrong:['The customer, once they pick a date.','The technician, by checking the calendar windows.','NYSDEC, on every individual job.']}
         ]},
         {title:'Flying squirrels: the 5-visit exclusion',intro:'The Flying Squirrel SOP is built around one clue — the noise is at night — and one structure: five visits, ending with a permanent seal.',facts:[
           'Flying squirrels are nocturnal — that is why customers hear them at night, and it is the clue that separates them from gray squirrels.',
@@ -1151,10 +1170,10 @@
           'Health and safety: attic work means PPE for droppings and urine exposure, with respiratory protection where contamination is heavy. Follow company ladder and roof safety policy. Never handle wildlife with bare hands.',
           'Say this: “Flying squirrels are nocturnal — that’s why you hear them at night. We’ll put one-way devices on their entry points so the whole group leaves on its own overnight, then we seal everything permanently.” Before leaving, set expectations for the device period and the return visit for the final seal.'
         ],check:[
-          {q:'How many visits is the flying squirrel service?',a:'Five — and the included flying-squirrel-size entry point up high is sealed on the last visit.'},
-          {q:'A customer hears scratching in the attic every night but never during the day. What does that point to, and why?',a:'Flying squirrels — they are nocturnal. Daytime noise would point to gray squirrels instead.'},
-          {q:'What must you check before excluding?',a:'For dependent young — never separate mothers from nursing young.'},
-          {q:'Why is limb trimming part of every flying squirrel conversation?',a:'Overhanging limbs are the access route. Without trimming, re-entry is likely — present it as prevention, not an upsell.'}
+          {q:'How many visits is the flying squirrel service?',a:'Five — and the included flying-squirrel-size entry point up high is sealed on the last visit.',wrong:['Three visits.','Four visits — the same count as the rodent service.','A single visit — seal everything at once.']},
+          {q:'A customer hears scratching in the attic every night but never during the day. What does that point to, and why?',a:'Flying squirrels — they are nocturnal. Daytime noise would point to gray squirrels instead.',wrong:['Gray squirrels — nighttime activity is their pattern.','Flying squirrels — because they hibernate in attics through the summer.','Bats — they move around the roost all night.']},
+          {q:'What must you check before excluding?',a:'For dependent young — never separate mothers from nursing young.',wrong:['That the tree limbs have already been trimmed back.','That the customer has agreed to relocation.','That one-way devices are already installed.']},
+          {q:'Why is limb trimming part of every flying squirrel conversation?',a:'Overhanging limbs are the access route. Without trimming, re-entry is likely — present it as prevention, not an upsell.',wrong:['Limbs shade the roof and keep the attic cool for nesting.','Trimming removes the squirrels’ food source in the yard.','It is an upsell that raises the ticket on every job.']}
         ]},
         {title:'Groundhogs, opossums & skunks',intro:'Three under-the-deck specialists. All three jobs fail the same way: the animal is removed, but the space, the burrow, or the food that attracted it is left behind.',facts:[
           'Groundhogs: the damage is structural, not cosmetic — burrowing undermines slabs, footings, and retaining walls, and that is what the customer is actually paying to stop. Signs: large burrow entrances, often 10–12 inches wide · dirt mounds near holes · damage to gardens and vegetation · worn trails between the burrow and feeding areas. They burrow under sheds, decks, foundations, and retaining walls, and hibernate through winter.',
@@ -1177,11 +1196,11 @@
           'Skunk removal, where legal and under appropriate authority, never by hand — and removal without exclusion is temporary: the space and the attractants remain. Reduce grub populations where lawn digging is the complaint, since that removes the reason they are working the turf.',
           'Skunk odor: spray odor lingers for days outdoors and for weeks indoors or under structures. Remediation: locate and remove the carcass where possible · PPE — gloves and respirator at minimum · apply an enzyme-based deodorizer · improve ventilation. Even after a carcass is gone, odor held in insulation, soil, wood, and concrete can linger and may require enzyme treatment, odor neutralizers, or removal of contaminated material.'
         ],check:[
-          {q:'Why do groundhog jobs fail when only one hole is found and treated?',a:'Burrows commonly have multiple entrances, with tunnels running well beyond the visible mounds. Locating one hole does not mean the system is mapped.'},
-          {q:'When do you collapse a groundhog burrow?',a:'Only after removal is confirmed complete — never before, and never in spring without confirming it is empty.'},
-          {q:'A skunk is out at noon, stumbling and showing no fear. Your move?',a:'Do not approach it. Rabies precautions govern every skunk call — clear the area and escalate. Never handle a daytime-active, sick-acting skunk.'},
-          {q:'What shape defeats digging under an exclusion barrier?',a:'An L — the barrier is buried below grade and turned outward.'},
-          {q:'A customer wants the opossum under the deck left alone “because it eats thousands of ticks.” What do you say?',a:'That the tick claim is likely overstated per modern research — give them accurate information and let them decide. Either way, the fix that holds is closing the space and removing food attractants.'}
+          {q:'Why do groundhog jobs fail when only one hole is found and treated?',a:'Burrows commonly have multiple entrances, with tunnels running well beyond the visible mounds. Locating one hole does not mean the system is mapped.',wrong:['They don’t — one entrance is the whole burrow if you treat it thoroughly.','Groundhogs abandon the burrow as soon as one entrance is disturbed.','The one hole found is usually a skunk’s, not a groundhog’s.']},
+          {q:'When do you collapse a groundhog burrow?',a:'Only after removal is confirmed complete — never before, and never in spring without confirming it is empty.',wrong:['As soon as the traps are set, to force the animal out.','First thing on the job, before removal starts.','In spring, as soon as the entrance looks quiet.']},
+          {q:'A skunk is out at noon, stumbling and showing no fear. Your move?',a:'Do not approach it. Rabies precautions govern every skunk call — clear the area and escalate. Never handle a daytime-active, sick-acting skunk.',wrong:['Approach slowly and try to trap it by hand.','It is just hunting grubs — treat the lawn and move on.','Spray it with water to drive it off the property.']},
+          {q:'What shape defeats digging under an exclusion barrier?',a:'An L — the barrier is buried below grade and turned outward.',wrong:['A flat skirt of material laid on top of the soil.','A deeper straight trench, with no outward turn.','A mound of soil piled against the barrier.']},
+          {q:'A customer wants the opossum under the deck left alone “because it eats thousands of ticks.” What do you say?',a:'That the tick claim is likely overstated per modern research — give them accurate information and let them decide. Either way, the fix that holds is closing the space and removing food attractants.',wrong:['Agree — the tick benefit is proven, so leave the animal alone.','Tell them opossums are dangerous and it has to go today.','Tell them the claim is true, but the animal still has to be trapped.']}
         ]},
         {title:'Birds: management, pigeons & woodpeckers',intro:'Bird jobs carry more legal exposure than any other service we perform. Three SOPs — Bird Management, Pigeons, and Woodpeckers — and all three start with identification and the law.',facts:[
           'The rule that governs every bird job: identify the species before touching anything. Most native birds are federally protected, and disturbing an active nest is a violation regardless of intent. Only a few non-native or feral species are not protected — if the species is not positively identified as one of the unprotected ones, treat it as protected and stop.',
@@ -1202,10 +1221,10 @@
           'Deterrents and exclusion: netting is the most reliable physical solution, stood off from the wall so birds cannot reach the surface through it · reflective tape works by movement and flash, installed where wind will move it · visual scare devices work early and inconsistently, and must be moved periodically. Rotate, relocate, and combine methods — birds habituate to anything static. Act early: a bird that has used a site repeatedly is far harder to displace.',
           'Insects first: repeated feeding activity frequently indicates carpenter ants, termites, or wood-boring beetles. Netting over an active infestation leaves the customer with hidden structural damage and a bird that moves twelve feet down the wall.'
         ],check:[
-          {q:'Chimney swifts are in a customer’s chimney in July. When can the cap go on?',a:'After they migrate out — early October. Confirm the chimney is empty, clean it out, and cap it. An occupied chimney may not be disturbed.'},
-          {q:'What is the most common reason pigeon exclusion installations fail?',a:'Under-specifying the system for the pressure — not matching the method to how the birds use the site (loafing vs. roosting overnight vs. nesting) and the flock’s pressure level.'},
-          {q:'Irregular, clustered holes follow galleries in the siding, with frass exposed. What is the woodpecker telling you?',a:'There are insects in the wood. Feeding damage means the bird is a symptom — inspect for and treat the insect problem before selling deterrents.'},
-          {q:'A customer asks if they can trap the woodpecker themselves. What do you say?',a:'No — woodpeckers are federally protected, and lethal control is generally illegal without permits for anyone. Explain the protection clearly, and document that you did.'}
+          {q:'Chimney swifts are in a customer’s chimney in July. When can the cap go on?',a:'After they migrate out — early October. Confirm the chimney is empty, clean it out, and cap it. An occupied chimney may not be disturbed.',wrong:['Right away — July is outside the nesting season.','At the end of April, before they arrive.','Never — an occupied chimney can never be capped afterward.']},
+          {q:'What is the most common reason pigeon exclusion installations fail?',a:'Under-specifying the system for the pressure — not matching the method to how the birds use the site (loafing vs. roosting overnight vs. nesting) and the flock’s pressure level.',wrong:['Cleaning the droppings before the hardware goes up.','Estimating the flock size and pressure before quoting.','Treating for parasites where nesting was established.']},
+          {q:'Irregular, clustered holes follow galleries in the siding, with frass exposed. What is the woodpecker telling you?',a:'There are insects in the wood. Feeding damage means the bird is a symptom — inspect for and treat the insect problem before selling deterrents.',wrong:['It is drumming — territorial signaling on a resonant surface.','It is excavating a nesting cavity.','It is feeding, so sell deterrents first and skip the insect check.']},
+          {q:'A customer asks if they can trap the woodpecker themselves. What do you say?',a:'No — woodpeckers are federally protected, and lethal control is generally illegal without permits for anyone. Explain the protection clearly, and document that you did.',wrong:['Yes, if they use a live trap and release it nearby.','Yes — homeowners are exempt from the protection.','Only QualityPro can trap it, as part of a standard service.']}
         ]},
         {title:'Beavers, deer & rabbits',intro:'Three plant-and-water problems. The beaver job is about licensing and water, the deer job is about treating plants rather than property, and the rabbit job is mostly about talking a customer out of trapping.',facts:[
           'Beavers are very common throughout Westchester County — expect activity near streams, ponds, and wetlands, residential properties with water features, and drainage areas and culverts. They are nocturnal, so the job is diagnosed from sign. They chew constantly to keep their teeth worn down, and they build dams and lodges that alter water flow across the entire property.',
@@ -1228,11 +1247,11 @@
           'Exclusion is the better answer: fence valuable beds and vegetable gardens rather than attempting to protect an entire property. Use small-mesh wire — rabbits pass through openings that look too small — and bury or stake the bottom edge, because rabbits push under a fence that stops at grade.',
           'The spring nest call: baby rabbits found in a lawn usually need reassurance and information, not a service. At about three weeks they are roughly the size of a chipmunk, hop around on their own, begin eating grass and plants, and do not return to the nest, though the mother may still check on them briefly. Never promise a rabbit-free property.'
         ],check:[
-          {q:'Why is dam removal never sold on its own?',a:'Beavers rebuild quickly, often overnight. Dam removal only works combined with trapping or flow control.'},
-          {q:'Mix a gallon of Deer Out.',a:'13 oz concentrate + 115 oz water = 1 gallon — and never stronger than the prescribed rate.'},
-          {q:'A 2-acre property has a quarter-acre of susceptible shrubs. What gets priced?',a:'The treated area — a ¼-acre treatment, judged on area, plant density, and anticipated spray volume. Not the whole property.'},
-          {q:'A customer wants the rabbits in the garden trapped out. What do you recommend?',a:'Exclusion — small-mesh fencing with the bottom edge buried or staked. Trapping doesn’t hold, and repellents only reduce browsing. Never promise a rabbit-free property.'},
-          {q:'When is the mid-winter deer application sprayed?',a:'Only after inspecting — it is not an automatic respray. Check for new browsing against the previous photographs, then reapply where protection needs renewing.'}
+          {q:'Why is dam removal never sold on its own?',a:'Beavers rebuild quickly, often overnight. Dam removal only works combined with trapping or flow control.',wrong:['Dam removal is flatly illegal in New York.','It floods the downstream property every time.','Beavers abandon the site for good once a dam is removed.']},
+          {q:'Mix a gallon of Deer Out.',a:'13 oz concentrate + 115 oz water = 1 gallon — and never stronger than the prescribed rate.',wrong:['26 oz concentrate + 102 oz water = 1 gallon.','13 oz concentrate + 115 oz water — doubled for heavy pressure.','Equal parts concentrate and water = 1 gallon.']},
+          {q:'A 2-acre property has a quarter-acre of susceptible shrubs. What gets priced?',a:'The treated area — a ¼-acre treatment, judged on area, plant density, and anticipated spray volume. Not the whole property.',wrong:['The whole 2 acres — acreage is acreage.','A flat per-property rate.','The treated area, plus a full-property surcharge.']},
+          {q:'A customer wants the rabbits in the garden trapped out. What do you recommend?',a:'Exclusion — small-mesh fencing with the bottom edge buried or staked. Trapping doesn’t hold, and repellents only reduce browsing. Never promise a rabbit-free property.',wrong:['Trapping — it clears the garden for the season.','Repellent alone — it outperforms fencing.','Trapping, plus a promise the garden stays rabbit-free.']},
+          {q:'When is the mid-winter deer application sprayed?',a:'Only after inspecting — it is not an automatic respray. Check for new browsing against the previous photographs, then reapply where protection needs renewing.',wrong:['Automatically, on the scheduled date — no inspection needed.','Only when the customer calls to report new damage.','Never — one fall application covers the whole winter.']}
         ]},
         {title:'Coyotes, snakes, weasels & turkeys',intro:'Four calls where the conversation is most of the work — and, for coyotes, where the legal exposure is the highest of any service we perform.',facts:[
           'Coyotes: New York law is fact-specific, authority depends on the season and the circumstances, and municipal firearm discharge ordinances can prohibit action even where wildlife law would allow it. Outside the open season, a licensed NYSDEC Nuisance Wildlife Control Operator (NWCO) may handle nuisance situations under NWCO authority; coyotes attacking livestock or pets, threatening public safety, or causing chronic nuisance near structures may need additional authorization.',
@@ -1253,10 +1272,10 @@
           'Wild turkeys: a native bird living in flocks, roosting in trees at night. Conflicts: garden and crop damage while foraging · droppings on walkways, decks, patios, and vehicles · scratching damage to mulch beds and landscaping · aggressive or intimidating behavior toward people, most often in spring and almost always where feeding has occurred · roosting on structures and vehicles.',
           'Turkey service: remove attractants — stop all feeding, deliberate or incidental; remove or relocate bird feeders and clean up spilled seed; remove outdoor pet food; secure compost and clear fallen fruit; secure grain and livestock feed · protect the property with fencing or netting over gardens, newly seeded areas, and vulnerable plantings · restore wariness — maintain distance, stand ground, make noise, appear large; retreating from a bold turkey reinforces the behavior, and consistency across everyone on the property matters. Never advise anyone to strike, chase aggressively, or corner a turkey.'
         ],check:[
-          {q:'A customer demands a coyote be removed today. What do you promise?',a:'Nothing yet. Authority depends on the season, the location, and the specific situation — assess first, name the attractants found, and give the pet-protection steps while legal authority is confirmed.'},
-          {q:'Name three signs of a habituated coyote that must be escalated.',a:'Any three of: repeated daytime activity close to people with no avoidance · approaching or following people or leashed dogs · entering yards or decks while people are present · denning against or beneath an occupied structure · any aggressive encounter or contact.'},
-          {q:'Why is chicken wire the wrong answer for a weasel getting into a coop?',a:'Chicken wire keeps chickens in; it does not keep predators out, and a weasel fits through the mesh. Use ¼- or ½-inch hardware cloth, secured with screws and washers.'},
-          {q:'A rat snake lives in a customer’s barn, and they have no rodent complaints. What do you tell them?',a:'That the snake is doing rodent control they would otherwise pay for. Snakes follow food — exclusion of the structure is the proportionate response, not removal.'}
+          {q:'A customer demands a coyote be removed today. What do you promise?',a:'Nothing yet. Authority depends on the season, the location, and the specific situation — assess first, name the attractants found, and give the pet-protection steps while legal authority is confirmed.',wrong:['Removal today — coyote calls are always same-day.','That a licensed NWCO can always remove it out of season, no questions asked.','That removal creates a permanent vacancy on the property.']},
+          {q:'Name three signs of a habituated coyote that must be escalated.',a:'Any three of: repeated daytime activity close to people with no avoidance · approaching or following people or leashed dogs · entering yards or decks while people are present · denning against or beneath an occupied structure · any aggressive encounter or contact.',wrong:['A single nighttime sighting at the wood line, howling at dusk, and tracks near the coop.','Bird feeders in the yard, fallen fruit, and an unsecured garbage can.','A den in the woods well away from structures, and normal wariness of people.']},
+          {q:'Why is chicken wire the wrong answer for a weasel getting into a coop?',a:'Chicken wire keeps chickens in; it does not keep predators out, and a weasel fits through the mesh. Use ¼- or ½-inch hardware cloth, secured with screws and washers.',wrong:['Chicken wire rusts out too quickly outdoors.','Chicken wire works fine if it is doubled up in two layers.','Chicken wire is strong enough — the problem is only ever the staples.']},
+          {q:'A rat snake lives in a customer’s barn, and they have no rodent complaints. What do you tell them?',a:'That the snake is doing rodent control they would otherwise pay for. Snakes follow food — exclusion of the structure is the proportionate response, not removal.',wrong:['The snake has to come out today — barn snakes are always removed.','Leave it, and stop sealing the barn’s foundation gaps too.','Relocate the snake to the woods behind the barn as the standard fix.']}
         ]}
       ]},
       {title:'Products & Labels',source:'Built from Products and their label data',lessons:[
@@ -1268,9 +1287,9 @@
           'SDS access: the SDS for every product must be available in your truck and digitally — and the Truck Readiness checklist includes the SDS binder.',
           'PPE follows the label: the baseline is eye protection, gloves, long sleeves, and closed-toe boots. When the label requires a respirator: use the right cartridge, be fit-tested, and replace cartridges per schedule.'
         ],check:[
-          {q:'A customer asks you to apply a product somewhere its label doesn’t list. Your answer?',a:'No. If it’s not on the label, you don’t do it — period.'},
-          {q:'A product card shows “—” for dilution. What do you do before mixing?',a:'Read the label on the container. The app carries label data for only part of the product list; the physical label is the source.'},
-          {q:'What four things does the label control?',a:'Targets, dilution, application sites, and PPE.'}
+          {q:'A customer asks you to apply a product somewhere its label doesn’t list. Your answer?',a:'No. If it’s not on the label, you don’t do it — period.',wrong:['Yes, if the customer requests it in writing.','Yes, if the SDS allows that use.','Only if a supervisor approves it verbally.']},
+          {q:'A product card shows “—” for dilution. What do you do before mixing?',a:'Read the label on the container. The app carries label data for only part of the product list; the physical label is the source.',wrong:['Use the rate from memory — it is the same for most products.','Use the dilution from a similar product’s card.','Skip that product and grab an exempt one instead.']},
+          {q:'What four things does the label control?',a:'Targets, dilution, application sites, and PPE.',wrong:['Targets, dilution, price, and warranty.','Application sites, PPE, storage, and disposal.','Targets, price, application sites, and the service interval.']}
         ]},
         {title:'Baits: ants, roaches & rodents',intro:'Ready-to-use products dominate the bait shelf — most need no mixing at all. What you have to know is the target list, including the exclusions.',facts:[
           'Advion Ant Gel Bait — Targets: all major ant species: acrobat, Argentine, big-headed, carpenter, crazy, ghost, odorous house, pavement, Pharaoh, pyramid, fire ants, and more. Dilution: ready-to-use gel — no mixing. Apply 0.1–1.0 g spots or 1/4 in. lines on foraging trails.',
@@ -1281,10 +1300,10 @@
           'Selontra Rodent Bait — Targets: Norway rats, roof rats, and house mice (including anticoagulant-resistant rodents). Dilution: ready-to-use soft bait — 1 per placement (mice), 2–8 (rats); no mixing.',
           'Talpirid — Targets: moles. Dilution: ready-to-use worm bait — no mixing. Place 1 worm per active tunnel; re-bait runways resealed within 72 hours.'
         ],check:[
-          {q:'Which Advion ant product do you NOT reach for on carpenter ants?',a:'The Advion Ant Bait Station — its label excludes carpenter ants. The gel covers carpenter ants.'},
-          {q:'How much Advion Insect Granule goes down for cockroaches?',a:'2.3 lbs per 1,000 sq ft. The cricket rate is 1.15 lbs.'},
-          {q:'How often is a Gentrol Point Source device replaced, and how much area does one cover?',a:'Replace every 3 months; one device treats up to 75 sq ft.'},
-          {q:'Selontra placements — mice vs. rats?',a:'1 per placement for mice; 2–8 for rats.'}
+          {q:'Which Advion ant product do you NOT reach for on carpenter ants?',a:'The Advion Ant Bait Station — its label excludes carpenter ants. The gel covers carpenter ants.',wrong:['The Advion Ant Gel Bait — its label excludes carpenter ants.','The Advion Insect Granule — it treats carpenter ants only.','Niban Granular Bait — it excludes carpenter ants.']},
+          {q:'How much Advion Insect Granule goes down for cockroaches?',a:'2.3 lbs per 1,000 sq ft. The cricket rate is 1.15 lbs.',wrong:['1.15 lbs per 1,000 sq ft — the same as the cricket rate.','6 oz per 100 sq ft.','4 lbs per 1,000 sq ft, broadcast.']},
+          {q:'How often is a Gentrol Point Source device replaced, and how much area does one cover?',a:'Replace every 3 months; one device treats up to 75 sq ft.',wrong:['Replace every month; one device treats up to 75 sq ft.','Replace every 3 months; one device treats up to 750 sq ft.','Replace yearly; one device treats up to 75 sq ft.']},
+          {q:'Selontra placements — mice vs. rats?',a:'1 per placement for mice; 2–8 for rats.',wrong:['2–8 for mice; 1 per placement for rats.','1 per placement for both mice and rats.','1 per placement for mice; 10–12 for rats.']}
         ]},
         {title:'Sprays & concentrates: know your mix rates',intro:'The concentrates you mix most, with the label rates the Products section carries. Rates are per gallon of finished spray unless noted.',facts:[
           'Alpine WSG — Targets: ants (excluding Pharaoh), bed bugs, cockroaches (American, German, Turkestan), spiders (excluding brown recluse), fleas, house flies, mosquitoes, stored product pests, paper wasps, yellowjackets, crickets, earwigs, centipedes, millipedes, pillbugs, sowbugs, kudzu bugs, stink bugs. Dilution: 10 g (1 packet) per gallon = 0.1%; 20 g/gal = 0.2%; 30 g/gal = 0.3%. 1 gal per 1,000 sq ft.',
@@ -1296,10 +1315,10 @@
           'OneGuard Multi MoA Concentrate — Targets: mosquitoes (Aedes, Anopheles, Culex — including West Nile/Zika vectors), fleas, ticks, house flies. Dilution: 1–2 fl oz per gallon.',
           'EcoVia MT — Targets: mosquitoes, ticks, flies. Dilution: 1 oz makes up to 3 gal. Mosquito control: 0.33–0.66 fl oz per gallon per 1,000 sq ft.'
         ],check:[
-          {q:'Mix Alpine WSG at 0.2%.',a:'20 g — 2 packets — per gallon. (10 g = 0.1%, 30 g = 0.3%.)'},
-          {q:'What Bifen I/T rate goes on a termite treatment?',a:'0.06% — the top of its 0.5–1 fl oz per gallon range.'},
-          {q:'Suspend SC at its standard 0.06% rate?',a:'0.8 fl oz per gallon. (0.4 fl oz/gal makes 0.03%.)'},
-          {q:'Which concentrate here is the mosquito, flea, tick, and fly specialist?',a:'OneGuard Multi MoA — mixed at 1–2 fl oz per gallon.'}
+          {q:'Mix Alpine WSG at 0.2%.',a:'20 g — 2 packets — per gallon. (10 g = 0.1%, 30 g = 0.3%.)',wrong:['10 g — 1 packet — per gallon.','30 g — 3 packets — per gallon.','40 g — 4 packets — per gallon.']},
+          {q:'What Bifen I/T rate goes on a termite treatment?',a:'0.06% — the top of its 0.5–1 fl oz per gallon range.',wrong:['0.03% — the bottom of its 0.5–1 fl oz per gallon range.','0.25% — its strongest listed mix.','1.5 fl oz per gallon.']},
+          {q:'Suspend SC at its standard 0.06% rate?',a:'0.8 fl oz per gallon. (0.4 fl oz/gal makes 0.03%.)',wrong:['0.4 fl oz per gallon.','1.5 fl oz per gallon.','0.5 fl oz per gallon.']},
+          {q:'Which concentrate here is the mosquito, flea, tick, and fly specialist?',a:'OneGuard Multi MoA — mixed at 1–2 fl oz per gallon.',wrong:['EcoVia MT — mixed at 1–2 fl oz per gallon.','Bifen I/T — mixed at 1–2 fl oz per gallon.','Spectre 2 SC — mixed at 1–2 fl oz per gallon.']}
         ]},
         {title:'Dusts & granules',intro:'The void dusts and lawn granules. Most are ready-to-use — the skill is placement and rate per area, not mixing.',facts:[
           'Tempo 1% Dust (listed as both Envu Tempo 1% Dust and Tempo 1% Dust) — Targets: ants (excluding Pharaoh), bed bugs, cockroaches, spiders, silverfish, carpet beetles, clothes moths, crickets, earwigs, centipedes, millipedes, bees, wasps, and pantry/stored product pests. Dilution: ready-to-use dust — no mixing. Apply directly to voids, cracks, and crevices; re-apply every 7–10 days if needed.',
@@ -1309,10 +1328,10 @@
           'Nature-Cide Granular — Targets: crawling insects and emerging larvae; also repels rodents (including voles) and reptiles. Dilution: ready-to-use granules — no mixing. 20 lbs covers 5,000 sq ft (4 lbs per 1,000 sq ft).',
           'Nature-Cide Pest Management X2 — Targets: spiders, silverfish, cockroaches, earwigs, bed bugs, moths, stink bugs, mites, flies, fleas, ticks, caterpillars, ants, mosquitoes, hornets. Dilution: 1:9 with water (severe infestations) up to 1:39 (maintenance).'
         ],check:[
-          {q:'Name two ready-to-use dusts for a roach void treatment.',a:'Tempo 1% Dust and Boractin Insecticide Powder — both ready-to-use, no mixing.'},
-          {q:'How often may Tempo dust need re-applying?',a:'Every 7–10 days, if needed.'},
-          {q:'Talstar PL rate per 1,000 sq ft — and what happens right after application?',a:'1.15–2.3 lbs per 1,000 sq ft — and water it in after application.'},
-          {q:'How much area does a 20 lb bag of Nature-Cide Granular cover?',a:'5,000 sq ft — 4 lbs per 1,000 sq ft.'}
+          {q:'Name two ready-to-use dusts for a roach void treatment.',a:'Tempo 1% Dust and Boractin Insecticide Powder — both ready-to-use, no mixing.',wrong:['Tempo 1% Dust and Bifen L/P Granule.','Boractin Insecticide Powder and Talstar PL Granular.','Nature-Cide Granular and Bifen L/P Granule.']},
+          {q:'How often may Tempo dust need re-applying?',a:'Every 7–10 days, if needed.',wrong:['Every 30 days, if needed.','Once a year.','Daily through the first week.']},
+          {q:'Talstar PL rate per 1,000 sq ft — and what happens right after application?',a:'1.15–2.3 lbs per 1,000 sq ft — and water it in after application.',wrong:['1.15–2.3 lbs per 1,000 sq ft — and leave it dry.','125 lbs per 1,000 sq ft — and water it in.','4 lbs per 1,000 sq ft — and water it in.']},
+          {q:'How much area does a 20 lb bag of Nature-Cide Granular cover?',a:'5,000 sq ft — 4 lbs per 1,000 sq ft.',wrong:['1,000 sq ft — 20 lbs per 1,000 sq ft.','2,500 sq ft — 8 lbs per 1,000 sq ft.','10,000 sq ft — 2 lbs per 1,000 sq ft.']}
         ]},
         {title:'Specialty: bed bugs, termites, wood & sanitation',intro:'The single-purpose shelf: bed bug products, termite and wood products, an IGR concentrate, and the sanitizer.',facts:[
           'Crossfire Bed Bug Concentrate — Targets: bed bugs and bed bug eggs (all life stages). Dilution: 13 fl oz per gallon of water (makes 10 finished gallons per 130 oz container).',
@@ -1325,10 +1344,10 @@
           'Sterifab — Targets: roaches, bedbugs, ants, silverfish, lice, fleas, ticks, sowbugs, centipedes, firebrats, mites; also a sanitizer/fungicide/mildewcide. Dilution: ready-to-use spray — apply until damp, keep wet 10 min; no mixing.',
           'Vector Kleer Essential Oil Insecticide — Targets: mosquitoes, fleas, flies, ticks. Dilution: 1–3 oz per gallon (3–6 oz/gal for fleas, flies, ticks). It is the spray half of both tick programs in the Ticks SOP: Bifen LP granular + Vector Kleer (traditional), or Nature-Cide granular + Vector Kleer (botanical only).'
         ],check:[
-          {q:'Mix Crossfire for a bed bug job.',a:'13 fl oz per gallon of water.'},
-          {q:'Bora-Care ratios: remedial termite treatment, foaming voids, prevention?',a:'1:1 remedial · 2:1 foaming/misting voids · 5:1 prevention.'},
-          {q:'Which product in this lesson is explicitly NOT for bed bugs?',a:'Bora-Care — termites, beetles, and fungi only.'},
-          {q:'How long must Sterifab stay wet?',a:'10 minutes — apply until damp and keep it wet.'}
+          {q:'Mix Crossfire for a bed bug job.',a:'13 fl oz per gallon of water.',wrong:['1 oz per gallon of water.','1 lb per gallon of water.','13 fl oz per 10 gallons of water.']},
+          {q:'Bora-Care ratios: remedial termite treatment, foaming voids, prevention?',a:'1:1 remedial · 2:1 foaming/misting voids · 5:1 prevention.',wrong:['5:1 remedial · 2:1 foaming/misting voids · 1:1 prevention.','1:1 remedial · 5:1 foaming/misting voids · 2:1 prevention.','2:1 for all three uses.']},
+          {q:'Which product in this lesson is explicitly NOT for bed bugs?',a:'Bora-Care — termites, beetles, and fungi only.',wrong:['Crossfire Bed Bug Concentrate.','Bedlam Plus.','Sterifab.']},
+          {q:'How long must Sterifab stay wet?',a:'10 minutes — apply until damp and keep it wet.',wrong:['3 minutes.','30 minutes.','Until the next visit.']}
         ]}
       ]},
       {title:'Pricing',source:'Built from the Price List',lessons:[
@@ -1343,10 +1362,10 @@
           'Flea Treatment — $345.',
           'As Needed Service Plan — $195: for previous service plan customers only, covering the Silver pest list; visits start at $195 plus tax, with additional charges possible depending on service.'
         ],check:[
-          {q:'Quote a 2-visit ant service.',a:'$395. (1 visit is $295.)'},
-          {q:'What does an inspection cost?',a:'$195.'},
-          {q:'Rodent service at 1, 2, and 4 visits?',a:'$295 · $395 · $595.'},
-          {q:'A flea treatment?',a:'$345.'}
+          {q:'Quote a 2-visit ant service.',a:'$395. (1 visit is $295.)',wrong:['$295.','$595.','$695.']},
+          {q:'What does an inspection cost?',a:'$195.',wrong:['$295.','$125.','$345.']},
+          {q:'Rodent service at 1, 2, and 4 visits?',a:'$295 · $395 · $595.',wrong:['$295 · $395 · $495.','$195 · $295 · $395.','$345 · $445 · $595.']},
+          {q:'A flea treatment?',a:'$345.',wrong:['$295.','$395.','$195.']}
         ]},
         {title:'Stinging insects, ticks, mosquitoes & seasonal services',intro:'The seasonal price shelf — wasps, ticks, mosquitoes, and the fall services customers call about by name.',facts:[
           'Wasp Service (Down Low) — $345 · Wasp Service (Up High) — $425.',
@@ -1359,10 +1378,10 @@
           'Stink Bug Service/Overwintering Pests — $425 (Overwintering Pests is also listed on its own at $425).',
           'Deer Repellent (Winter) — $249 · Snake Repellant — $395.'
         ],check:[
-          {q:'A wasp nest at the roofline — which price?',a:'$425 — Wasp Service (Up High). Down low is $345.'},
-          {q:'A seasonal tick application?',a:'$325 — the same list price for early spring, late spring, summer, and fall applications.'},
-          {q:'The overwintering pest service?',a:'$425.'},
-          {q:'In2Care mosquito stations: setup, then maintenance?',a:'Setup $195 · maintenance $30 per visit — $25 in the first year.'}
+          {q:'A wasp nest at the roofline — which price?',a:'$425 — Wasp Service (Up High). Down low is $345.',wrong:['$345 — Wasp Service (Down Low).','$395 — Yellow Jacket Service.','$295 — Exterior Bee & Wasp Preventative Treatment.']},
+          {q:'A seasonal tick application?',a:'$325 — the same list price for early spring, late spring, summer, and fall applications.',wrong:['$125.','$425.','$249.']},
+          {q:'The overwintering pest service?',a:'$425.',wrong:['$325.','$395.','$295.']},
+          {q:'In2Care mosquito stations: setup, then maintenance?',a:'Setup $195 · maintenance $30 per visit — $25 in the first year.',wrong:['Setup $195 · maintenance $50 per visit.','Setup $30 · maintenance $195 per visit.','Setup $195 · maintenance $25 per visit — $30 in the first year.']}
         ]},
         {title:'Wildlife work, exclusion & termites',intro:'Wildlife and exclusion pricing from the Price List — including the line items that show $0.00, and what that actually means.',facts:[
           'Flying Squirrel Service — $795.',
@@ -1374,10 +1393,10 @@
           'Termite work: Termite Inspection — $295 · Termite Treatment (Spot Liquid Treatment) — $395 · Termite Bait System Transfer — $595 · Termite Renewal Fee — $375.',
           'Several large jobs show $0.00 in the Price List — Bat Exclusion, Exclusion, Partial Exclusion, Chimney Cap, Bed Bug Service, and others. $0.00 does not mean free: those jobs are priced from the inspection and the estimate. Never quote a customer $0.'
         ],check:[
-          {q:'The flying squirrel service?',a:'$795.'},
-          {q:'Seal one ground-level rodent entry point.',a:'$95. (AC/utility line sealing is $95 at ground level, $125 high up.)'},
-          {q:'A small animal removal runs into a second hour. What does the customer pay?',a:'$295 for the removal, plus $195 plus tax for the additional hour.'},
-          {q:'The Price List shows Bat Exclusion at $0.00. What do you quote?',a:'Not zero — that job is priced by estimate after inspection. $0.00 in the list means “priced per job,” never free.'}
+          {q:'The flying squirrel service?',a:'$795.',wrong:['$595.','$495.','$395.']},
+          {q:'Seal one ground-level rodent entry point.',a:'$95. (AC/utility line sealing is $95 at ground level, $125 high up.)',wrong:['$125.','$195.','$295.']},
+          {q:'A small animal removal runs into a second hour. What does the customer pay?',a:'$295 for the removal, plus $195 plus tax for the additional hour.',wrong:['$395 for the removal, plus $195 plus tax for the additional hour.','$295 flat — extra hours are included.','$195 total for the removal and the extra hour.']},
+          {q:'The Price List shows Bat Exclusion at $0.00. What do you quote?',a:'Not zero — that job is priced by estimate after inspection. $0.00 in the list means “priced per job,” never free.',wrong:['$0 — the list price is the price.','The Bat Check Valve price, $495.','A flat $295, like animal removal.']}
         ]}
       ]},
       {title:'In the Field',source:'Built from the Checklists',lessons:[
@@ -1386,27 +1405,27 @@
           'Truck Readiness: products stocked & secured · sprayer pressure tested · granular spreader · backpack sprayer · duster · dewebbing pole · PPE · SDS binder · termite/rodent supplies.',
           'PPE subsection (in Truck Readiness): safety glasses · gloves · respirator · first aid kit · spill kit.'
         ],check:[
-          {q:'Recite the first three Start of Day items.',a:'Review route · confirm appointments · truck inspection.'},
-          {q:'What is the last item on the Start of Day checklist?',a:'Grab required keys.'},
-          {q:'Name five items from the Truck Readiness checklist.',a:'Any five of: products stocked & secured · sprayer pressure tested · granular spreader · backpack sprayer · duster · dewebbing pole · PPE · SDS binder · termite/rodent supplies.'}
+          {q:'Recite the first three Start of Day items.',a:'Review route · confirm appointments · truck inspection.',wrong:['Truck inspection · review route · confirm appointments.','Review route · truck inspection · products stocked for today’s jobs.','Confirm appointments · grab required keys · phone charged.']},
+          {q:'What is the last item on the Start of Day checklist?',a:'Grab required keys.',wrong:['Phone charged.','License & ID on person.','Equipment loaded and ready.']},
+          {q:'Name five items from the Truck Readiness checklist.',a:'Any five of: products stocked & secured · sprayer pressure tested · granular spreader · backpack sprayer · duster · dewebbing pole · PPE · SDS binder · termite/rodent supplies.',wrong:['Review route · confirm appointments · truck inspection · phone charged · grab required keys.','Sprayer pressure tested · granular spreader · backpack sprayer · duster · route sheet.','Products stocked & secured · PPE · SDS binder · termite/rodent supplies · customer contracts.']}
         ]},
         {title:'Initial Pest Service — and the routine visit',intro:'The initial pest service runs interview to walkthrough. The routine visit is its shorter sibling.',facts:[
           'Initial Pest Service, in order: 1. Customer interview · 2. Full perimeter inspection · 3. Interior inspection · 4. Photo problem areas · 5. Treat per plan · 6. Customer walkthrough.',
           'The order is the lesson: interview before inspection, inspection before treatment, and the walkthrough last — the customer hears findings and what was done before you leave.',
           'Routine Service, in order: 1. Greet customer · 2. Note new concerns · 3. Dewebbing · 4. Perimeter treatment · 5. Bait stations checked · 6. Service ticket completed.'
         ],check:[
-          {q:'What is step one of an initial service — and why doesn’t treatment come first?',a:'The customer interview. You interview, inspect the perimeter and the interior, and photograph problem areas before you treat per plan.'},
-          {q:'What closes out an initial service?',a:'The customer walkthrough.'},
-          {q:'On a routine visit, what happens between noting new concerns and the perimeter treatment?',a:'Dewebbing — then the perimeter treatment, bait station check, and the completed service ticket.'}
+          {q:'What is step one of an initial service — and why doesn’t treatment come first?',a:'The customer interview. You interview, inspect the perimeter and the interior, and photograph problem areas before you treat per plan.',wrong:['The full perimeter inspection — you inspect first, then interview.','Treat per plan — treatment comes first, paperwork after.','The customer walkthrough — it opens the visit as well as closing it.']},
+          {q:'What closes out an initial service?',a:'The customer walkthrough.',wrong:['Treat per plan.','Photo problem areas.','The interior inspection.']},
+          {q:'On a routine visit, what happens between noting new concerns and the perimeter treatment?',a:'Dewebbing — then the perimeter treatment, bait station check, and the completed service ticket.',wrong:['Bait stations checked.','The service ticket is completed.','The customer interview.']}
         ]},
         {title:'End of Day',intro:'Eleven items close the day. Most of them exist so that tomorrow starts clean — and nothing of value, or value-bearing, stays in the truck overnight.',facts:[
           'End of Day, in order: 1. Log hours · 2. Notes complete · 3. Photos uploaded · 4. Garbage disposed of · 5. Garbage/captures removed from truck · 6. Checks/cash brought to office · 7. Phones/iPad stored out of sight · 8. Equipment cleaned, emptied, depressurized; stored in warehouse Nov–Feb · 9. Incidents/accidents reported · 10. Keys left in the office · 11. Truck locked.',
           'Money and devices never stay visible in the truck: checks and cash come to the office, and phones and the iPad are stored out of sight.',
           'Equipment is left cleaned, emptied, and depressurized — and from November through February it is stored in the warehouse.'
         ],check:[
-          {q:'Where do checks and cash go at the end of the day?',a:'To the office — never left in the truck. Phones and the iPad are stored out of sight.'},
-          {q:'In what state is equipment left?',a:'Cleaned, emptied, and depressurized — stored in the warehouse from November through February.'},
-          {q:'What are the last two items on the End of Day checklist?',a:'Keys left in the office — then truck locked.'}
+          {q:'Where do checks and cash go at the end of the day?',a:'To the office — never left in the truck. Phones and the iPad are stored out of sight.',wrong:['Locked in the truck overnight, out of sight.','In the warehouse, with the equipment.','Home with the technician, brought in at the end of the week.']},
+          {q:'In what state is equipment left?',a:'Cleaned, emptied, and depressurized — stored in the warehouse from November through February.',wrong:['Cleaned, and left full and pressurized for the morning.','Stored in the truck year-round, cleaned once a week.','Cleaned, emptied, and depressurized — stored in the warehouse from June through August.']},
+          {q:'What are the last two items on the End of Day checklist?',a:'Keys left in the office — then truck locked.',wrong:['Incidents/accidents reported — then keys left in the office.','Truck locked — then keys left in the office.','Garbage/captures removed from truck — then truck locked.']}
         ]}
       ]}
     ];
@@ -1972,7 +1991,7 @@
     var SB_KEY='sb_publishable_sT4OYqX5_H-GMiWWoDbpzQ_kSGEk8OD';
     var SB_FALLBACK_NAMES=['Adrian Morocho','Andrew Aldaz','Angel Acosta','Brandon Horton','Esteban Santana','Gage Bracey','Hector Lima','Jim Horton','Jose Vallejo','Josh Renfroe','Michelle Horton','Patricia Kasday','Juan Cristosomo','Miguel Frias','Luis Espinal','Luis Sinchi','Mauricio Valladares'];
     var SB_ADMINS=['Jim Horton','Josh Renfroe','Michelle Horton','Patricia Kasday'];
-    var sbSession=null,sbMyEvents=null,sbRecorded={},sbFlushing=false,sbLoadingProgress=false,sbNamesCache=null,sbTeamEvents=null,sbLoadingTeam=false,mpName=null,mpMode='enter';
+    var sbSession=null,sbMyEvents=null,sbRecorded={},sbFlushing=false,sbLoadingProgress=false,sbNamesCache=null,sbTeamEvents=null,sbLoadingTeam=false,mpName=null,mpMode='enter',sbLeaderboardRows=null,sbLoadingLeaderboard=false;
     function sbStore(key,value){try{if(value===null)localStorage.removeItem(key);else localStorage.setItem(key,JSON.stringify(value))}catch(e){}}
     function sbRead(key){try{var v=localStorage.getItem(key);return v?JSON.parse(v):null}catch(e){return null}}
     sbSession=sbRead('qpfg_session');
@@ -2056,7 +2075,7 @@
       meta.textContent='Signed in as '+sbSession.name+' · '+c.lessons+' of '+sbTotalLessons()+' lessons done';
     }
     function sbSignOut(){
-      sbSession=null;sbMyEvents=null;sbRecorded={};sbTeamEvents=null;mpName=null;
+      sbSession=null;sbMyEvents=null;sbRecorded={};sbTeamEvents=null;mpName=null;sbLeaderboardRows=null;
       sbStore('qpfg_session',null);
       updateProgressCard();
       renderMyProgress();
@@ -2165,6 +2184,7 @@
         var loading=document.createElement('p');loading.className='practice-note';loading.textContent='Loading your progress…';
         panel.appendChild(loading);
         sbLoadMyProgress();
+        renderLeaderboardSection();
         if(SB_ADMINS.indexOf(sbSession.name)>-1)renderTeamProgress(panel);
         return;
       }
@@ -2191,6 +2211,7 @@
       addList('Checklists completed',unique(byKind.checklist),function(r){return r.item_label||r.item_key});
       addList('Inspections completed',unique(byKind.inspection),function(r){return r.item_label||r.item_key});
       addList('Quizzes',byKind.quiz.slice().reverse(),function(r){var s=sbDetailScore(r.detail);var when=sbRowDate(r);return 'Training Quiz'+(s?' — '+s:'')+(when?' · '+sbFormatDate(when):'')});
+      renderLeaderboardSection();
       if(SB_ADMINS.indexOf(sbSession.name)>-1)renderTeamProgress(panel);
     }
     function renderTeamProgress(afterPanel){
@@ -2227,6 +2248,48 @@
         row.append(name,counts);section.appendChild(row);
       });
     }
+    function renderLeaderboardSection(){
+      var panel=document.createElement('section');panel.className='practice-panel';
+      docList.appendChild(panel);
+      var meta=document.createElement('p');meta.className='practice-meta';meta.textContent='TEAM STANDINGS';
+      var heading=document.createElement('h3');heading.className='practice-title';heading.textContent='Leaderboard';
+      panel.append(meta,heading);
+      if(sbLeaderboardRows){buildLeaderboardList(panel,sbLeaderboardRows);return}
+      var loading=document.createElement('p');loading.className='practice-note';loading.textContent='Loading the leaderboard…';
+      panel.appendChild(loading);
+      if(sbLoadingLeaderboard)return;
+      sbLoadingLeaderboard=true;
+      sbRpc('leaderboard',{p_token:sbSession.token}).then(function(rows){
+        sbLoadingLeaderboard=false;
+        var usable=Array.isArray(rows)?rows.filter(function(r){return r&&(r.technician_name||r.name)}):[];
+        if(!usable.length){if(loading.isConnected)loading.textContent='Leaderboard couldn’t load — check your connection, or open the Field Guide on your phone.';return}
+        sbLeaderboardRows=usable;
+        if(currentView==='My Progress'&&sbSession)renderMyProgress();
+      },function(){
+        sbLoadingLeaderboard=false;
+        if(loading.isConnected)loading.textContent='Leaderboard couldn’t load — check your connection, or open the Field Guide on your phone.';
+      });
+    }
+    function buildLeaderboardList(panel,rows){
+      var sorted=rows.slice().sort(function(a,b){var d=(Number(b.total)||0)-(Number(a.total)||0);if(d)return d;return sbRowName(a).localeCompare(sbRowName(b))});
+      var list=document.createElement('div');list.className='lb-list';
+      sorted.forEach(function(r,i){
+        var name=sbRowName(r);
+        var row=document.createElement('div');row.className='lb-row'+(i===0?' gold':i===1?' silver':i===2?' bronze':'')+(sbSession&&name===sbSession.name?' you':'');
+        var rank=document.createElement('span');rank.className='lb-rank';rank.textContent=String(i+1);rank.setAttribute('aria-label','Rank '+(i+1));
+        var main=document.createElement('div');main.className='lb-main';
+        var nameEl=document.createElement('span');nameEl.className='lb-name';nameEl.textContent=name;
+        if(sbSession&&name===sbSession.name){var you=document.createElement('span');you.className='lb-you';you.textContent=' (You)';nameEl.appendChild(you)}
+        var brk=document.createElement('span');brk.className='lb-break';brk.textContent='Lessons '+(Number(r.lessons)||0)+' · Quizzes '+(Number(r.quizzes)||0)+' · Checklists '+(Number(r.checklists)||0)+' · Inspections '+(Number(r.inspections)||0);
+        main.append(nameEl,brk);
+        var totalWrap=document.createElement('div');totalWrap.className='lb-total-wrap';
+        var total=document.createElement('span');total.className='lb-total';total.textContent=String(Number(r.total)||0);
+        var totalLabel=document.createElement('span');totalLabel.className='lb-total-label';totalLabel.textContent='TOTAL';
+        totalWrap.append(total,totalLabel);
+        row.append(rank,main,totalWrap);list.appendChild(row);
+      });
+      panel.appendChild(list);
+    }
     var stop=new Set(['a','an','and','are','as','at','be','by','can','do','for','from','how','i','in','is','it','of','on','or','the','to','what','when','where','with']);
     function tokens(q){return (q.toLowerCase().match(/[a-z0-9]+/g)||[]).filter(function(t){return (t.length>1||/^\d+$/.test(t))&&!stop.has(t)}).filter(function(t,i,a){return a.indexOf(t)===i})}
     function count(hay,term){var n=0,pos=0;while((pos=hay.indexOf(term,pos))!==-1){n++;pos+=term.length}return n}
@@ -2246,7 +2309,7 @@
       found.forEach(function(r){var b=document.createElement('button');b.type='button';b.className='result-card';var top=document.createElement('div');top.className='result-top';top.appendChild(makeBadge(r.doc.category));var dt=document.createElement('span');dt.className='doc-title';dt.textContent=r.doc.title;top.appendChild(dt);var h=document.createElement('h3');h.textContent=r.sec.heading||r.doc.title;var snippetWrap=document.createElement('div');snippetWrap.className='result-snippet';appendParagraphs(snippetWrap,snippet(r.sec.text||'',terms),terms);b.append(top,h,snippetWrap);b.addEventListener('click',function(){openDoc(r.di,r.si)});results.appendChild(b)})
     }
     function renderBrowse(){
-      docList.replaceChildren();docList.className='doc-list';document.getElementById('categoryTitle').textContent=activeCategory.toUpperCase();
+      docList.replaceChildren();docList.className='doc-list';document.getElementById('categoryTitle').textContent=(activeCategory==='My Progress'?'Sign In':activeCategory).toUpperCase();
       if(activeCategory==='My Progress'){renderMyProgress();return}
       if(activeCategory==='Inspections'){
         document.getElementById('browseCount').textContent=inspections.length+' inspection checklists';
@@ -2330,8 +2393,8 @@
       if(lesson.intro){var introSection=document.createElement('section');introSection.className='pest-id-section';lesson.intro.split('\n').forEach(function(text){var p=document.createElement('p');p.textContent=text;introSection.appendChild(p)});body.appendChild(introSection)}
       var factsSection=document.createElement('section');factsSection.className='pest-id-section';var factsHeading=document.createElement('h3');factsHeading.textContent='Key facts';factsSection.appendChild(factsHeading);var factsList=document.createElement('ul');factsList.className='pest-id-list';lesson.facts.forEach(function(fact){var item=document.createElement('li');item.textContent=fact;factsList.appendChild(item)});factsSection.appendChild(factsList);body.appendChild(factsSection);
       var checkSection=document.createElement('section');checkSection.className='pest-id-section';var checkHeading=document.createElement('h3');checkHeading.textContent='Check yourself';checkSection.appendChild(checkHeading);
-      var seenChecks={};
-      lesson.check.forEach(function(entry,qi){var wrap=document.createElement('div');wrap.className='training-check';var q=document.createElement('p');var qLabel=document.createElement('strong');qLabel.textContent='Q'+(qi+1)+'. ';q.append(qLabel,document.createTextNode(entry.q));var answer=document.createElement('div');answer.className='quiz-answer';answer.textContent=entry.a;var toggle=document.createElement('button');toggle.type='button';toggle.className='quiz-toggle';toggle.textContent='Show answer';toggle.setAttribute('aria-expanded','false');toggle.addEventListener('click',function(){var visible=answer.classList.toggle('visible');toggle.textContent=visible?'Hide answer':'Show answer';toggle.setAttribute('aria-expanded',visible?'true':'false');if(visible){seenChecks[qi]=true;if(Object.keys(seenChecks).length>=lesson.check.length)trackProgress('lesson',sbLessonKey(module.title,lesson.title),lesson.title,{module:module.title})}else{delete seenChecks[qi]}});wrap.append(q,toggle,answer);checkSection.appendChild(wrap)});
+      var answeredChecks={};
+      lesson.check.forEach(function(entry,qi){var wrap=document.createElement('div');wrap.className='training-check';var q=document.createElement('p');var qLabel=document.createElement('strong');qLabel.textContent='Q'+(qi+1)+'. ';q.append(qLabel,document.createTextNode(entry.q));wrap.appendChild(q);var distractors=(entry.wrong&&entry.wrong.length>=2)?entry.wrong.slice():lesson.check.filter(function(other,oi){return oi!==qi}).map(function(other){return other.a});var optionValues=shuffleCopy([entry.a].concat(distractors));var options=document.createElement('div');options.className='practice-options';var feedback=document.createElement('p');feedback.className='check-feedback';var explanation=document.createElement('div');explanation.className='quiz-answer';explanation.textContent=entry.a;var solved=false;optionValues.forEach(function(value){var option=document.createElement('button');option.type='button';option.className='practice-option';option.textContent=value;option.addEventListener('click',function(){if(solved)return;if(value===entry.a){solved=true;option.classList.add('correct');Array.prototype.forEach.call(options.children,function(node){node.disabled=true});feedback.textContent='';feedback.className='check-feedback';explanation.classList.add('visible');answeredChecks[qi]=true;if(Object.keys(answeredChecks).length>=lesson.check.length)trackProgress('lesson',sbLessonKey(module.title,lesson.title),lesson.title,{module:module.title})}else{option.classList.add('incorrect');option.disabled=true;feedback.textContent='Not quite — try again.';feedback.className='check-feedback bad'}});options.appendChild(option)});wrap.append(options,feedback,explanation);checkSection.appendChild(wrap)});
       body.appendChild(checkSection);
       if(!lesson.check.length)trackProgress('lesson',sbLessonKey(module.title,lesson.title),lesson.title,{module:module.title});
       if(li<module.lessons.length-1){var next=document.createElement('button');next.type='button';next.className='quiz-toggle training-next';next.textContent='Next lesson: '+module.lessons[li+1].title;next.addEventListener('click',function(){trackProgress('lesson',sbLessonKey(module.title,lesson.title),lesson.title,{module:module.title});openTrainingLesson(mi,li+1)});body.appendChild(next)}
