@@ -273,6 +273,8 @@
     .check-feedback:empty{display:none}
     .check-feedback.bad{margin-top:10px;color:var(--red)}
     .training-next{display:block;width:100%;margin-top:20px}
+    .training-actions{display:grid;gap:10px;margin-top:22px}
+    .training-actions .practice-btn{width:100%;min-height:48px;font-size:1rem}
     .practice-panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:clamp(17px,4vw,26px)}
     .practice-meta{margin:0 0 7px;color:var(--red);font-weight:700}
     .practice-title{font-family:"Barlow Condensed",sans-serif;font-size:1.5rem;line-height:1.15;margin:0 0 16px}
@@ -1889,6 +1891,7 @@
       {season:'OCTOBER',alert:'Spider migration & webbing surge',talking:"This is spider month — they're moving for warmth and webbing up overnight.",reminder:'Double dewebbing rounds. Hit eaves and meter boxes.'},
       {season:'RAINY SEASON'}
     ];
+    var PRODUCT_LABEL_URLS={'Advion Ant Gel Bait':'https://www.syngentapmp.com/labels/advion-ant-gel','Advion Ant Bait Station':'https://www.syngentapmp.com/product/advion-ant-bait-arena-insecticide','Advion Insect Granule':'https://www.syngentapmp.com/product/advion-insect-granule-insecticide','Advion WDG':'https://www.syngentapmp.com/product/advion-wdg-insecticide','Advion Cockroach Gel Bait':'https://www.syngentapmp.com/product/advion-cockroach-gel-bait-insecticide','Bifen I/T':'https://www.controlsolutionsinc.com/csi-pest/products/bifen-it','Bifen L/P Insecticide Granule':'https://www.controlsolutionsinc.com/csi-pest/general-insecticide/bifen-lp-granules','Boractin Insecticide Powder':'https://rockwelllabs.com/boractin/','CB-80 Insecticide':'https://www.us.envu.com/professional-pest-management/products/cb-80-insecticide','Contrac All Weather Blox':'https://www.belllabs.com/products/us/pest-control/contrac-all-weather-blox/','Crossfire Bed Bug Concentrate':'https://www.mgk.com/product_docs/15603/ldEAI003.pdf','Cy-Kick SC':'https://pestcontrol.basf.us/products/cy-kick--cs-controlled-release-insecticide.html','Delta Dust .05%':'https://www.us.envu.com/professional-pest-management/products/deltadust','DeltaGard G Granule':'https://www.us.envu.com/professional-pest-management/products/deltagard-g','Envu DeltaGard G':'https://www.us.envu.com/professional-pest-management/products/deltagard-g','D-FENSE SC':'https://www.controlsolutionsinc.com/csi-pest/products/d-fense-sc','EcoVia MT':'https://rockwelllabs.com/wp-content/uploads/2026/03/EcoVia-MT-Product-Label-3-2026.pdf','EcoVia EC':'https://rockwelllabs.com/ecovia-ec/','Gentrol IGR Concentrate':'https://www.zoecon.com/all-products/gentrol/gentrol-igr-concentrate','Gentrol Point Source':'https://www.zoecon.com/all-products/gentrol/gentrol-point-source-roach-control-device','In2Mix':'https://www3.epa.gov/pesticides/chem_search/ppls/091720-00001-20220630.pdf','Maxforce Complete Granular Bait':'https://www.us.envu.com/professional-pest-management/products/maxforce-complete-brand-granular-insect-bait','Nature-Cide Pest Management X2':'https://nature-cide.com/pages/labels-sds','Nature-Cide Granular':'https://nature-cide.com/products/nature-cide-granular-x2-turf-pest-management','Niban Granular Bait':'https://nisuscorp.com/product/niban','Nuvan ProStrip':'https://amvac.com/products/nuvan-prostrips','OnSlaught Microencapsulated Insecticide':'https://www.mgk.com/product/onslaught-microencapsulated-insecticide/','Orthene PCO Pellets':'https://www.amvac.com/products/orthene-pco-pellet','Phantom Insecticide/Termiticide':'https://pestcontrol.basf.us/products/phantom--termiticide-insecticide.html','STRYKER Insecticide Concentrate':'https://www.controlsolutionsinc.com/csi-pest/products/stryker','Suspend SC .03%':'https://www.us.envu.com/professional-pest-management/products/suspend-sc','Taurus SC- NY':'https://www.controlsolutionsinc.com/csi-pest/products/taurus-sc','Termidor NY':'https://pestcontrol.basf.us/products/pest-sds-labels.html','Tim-Bor Professional':'https://nisuscorp.com/product/tim-bor-professional','Vector Kleer Essential Oil Insecticide':'https://www.controlsolutionsinc.com/csi-pest/products/vector-kleer','Vendetta Plus Roach Bait Gel w/ IGR':'https://www.mgk.com/product/vendetta-plus-cockroach-gel-bait/'};
     var products=[
       ['Advion Ant Gel Bait','100-1498'],
       ['Advion Ant Bait Station','100-1485'],
@@ -1957,7 +1960,7 @@
       ['Sterifab','397-13'],
       ['Spectre 2 SC Insecticide','91234-24-53883'],
       ['Tekko Pro IGR Concentrate','53883-335']
-    ].map(function(product,index){var label=window.productLabelData&&window.productLabelData[index+1];return{name:product[0],fields:[['Product',product[0]],['EPA #',product[1]],['Dilution',label?label.dilution:'—'],['Targets',label?label.targets:'—'],['Notes','—'],['SOP','Verify label before mixing']]}});
+    ].map(function(product,index){var label=window.productLabelData&&window.productLabelData[index+1];return{name:product[0],labelUrl:PRODUCT_LABEL_URLS[product[0]]||'',fields:[['Product',product[0]],['EPA #',product[1]],['Dilution',label?label.dilution:'—'],['Targets',label?label.targets:'—'],['Notes','—'],['SOP','Verify label before mixing']]}});
     var objections=[
       {title:'I already have pest control.',body:"Totally understand — most folks on this block do. Out of curiosity, are you happy with what they're doing? A lot of our customers came from another company. No pressure either way — happy to give you a second opinion if it ever helps."},
       {title:"I don't see any bugs.",body:"That's actually the best time to start. Prevention is way cheaper than dealing with an infestation. We just keep the perimeter protected so they never make it inside."},
@@ -1986,7 +1989,7 @@
     var SB_URL='https://nbhkndetjaytevyzqsuh.supabase.co';
     var SB_KEY='sb_publishable_sT4OYqX5_H-GMiWWoDbpzQ_kSGEk8OD';
     var SB_FALLBACK_NAMES=['Adrian Morocho','Andrew Aldaz','Angel Acosta','Brandon Horton','Esteban Santana','Gage Bracey','Hector Lima','Jim Horton','Jose Vallejo','Josh Renfroe','Michelle Horton','Patricia Kasday','Juan Cristosomo','Miguel Frias','Luis Espinal','Luis Sinchi','Mauricio Valladares'];
-    var sbSession=null,sbMyEvents=null,sbRecorded={},sbFlushing=false,sbLoadingProgress=false,sbNamesCache=null,mpName=null,mpMode='enter',sbLeaderboardRows=null,sbLoadingLeaderboard=false;
+    var sbSession=null,sbMyEvents=null,sbRecorded={},sbFlushing=false,sbLoadingProgress=false,sbNamesCache=null,mpName=null,mpMode='enter',sbLeaderboardRows=null,sbLoadingLeaderboard=false,sbProgressDirty=false,sbLastProgressFetch=0,sbEventSeq=0;
     function sbStore(key,value){try{if(value===null)localStorage.removeItem(key);else localStorage.setItem(key,JSON.stringify(value))}catch(e){}}
     function sbRead(key){try{var v=localStorage.getItem(key);return v?JSON.parse(v):null}catch(e){return null}}
     sbSession=sbRead('qpfg_session');
@@ -2009,6 +2012,7 @@
         if(sbRecorded[dedupe])return;
         sbRecorded[dedupe]=true;
       }
+      sbProgressDirty=true;sbEventSeq++;
       var ev={kind:kind,item_key:key,item_label:label,detail:detail||null};
       if(sbMyEvents)sbMyEvents.push({kind:kind,item_key:key,item_label:label,detail:detail,created_at:new Date().toISOString(),technician_name:sbSession.name});
       sbSendProgress(ev);
@@ -2027,7 +2031,7 @@
       if(!q.length)return;
       sbFlushing=true;
       (function next(i){
-        if(i>=q.length){sbStore('qpfg_queue',[]);sbFlushing=false;return}
+        if(i>=q.length){sbStore('qpfg_queue',[]);sbFlushing=false;sbLoadMyProgress();return}
         sbRpc('record_progress',{p_token:sbSession.token,p_kind:q[i].kind,p_item_key:q[i].item_key,p_item_label:q[i].item_label,p_detail:q[i].detail}).then(function(ok){
           if(ok===true)next(i+1);else{sbStore('qpfg_queue',q.slice(i));sbFlushing=false}
         },function(){sbStore('qpfg_queue',q.slice(i));sbFlushing=false});
@@ -2036,15 +2040,39 @@
     function sbLoadMyProgress(){
       if(!sbSession||sbLoadingProgress)return;
       sbLoadingProgress=true;
+      var seqAtStart=sbEventSeq;
       sbRpc('my_progress',{p_token:sbSession.token}).then(function(rows){
         sbLoadingProgress=false;
-        sbMyEvents=Array.isArray(rows)?rows:[];
+        sbLastProgressFetch=Date.now();
+        sbMyEvents=sbMergeEvents(Array.isArray(rows)?rows:[],sbMyEvents);
         sbRecorded={};
         sbMyEvents.forEach(function(r){if(r.kind&&r.item_key)sbRecorded[r.kind+'|'+r.item_key]=true});
+        if(sbEventSeq===seqAtStart)sbProgressDirty=false;
         updateProgressCard();
         if(currentView==='My Progress')renderMyProgress();
         if(currentView==='Training Library')renderTrainingLibrary();
+        if(sbEventSeq!==seqAtStart)setTimeout(function(){sbLoadMyProgress()},800);
       },function(){sbLoadingProgress=false});
+    }
+    function sbMergeEvents(serverRows,localRows){
+      if(!localRows||!localRows.length)return serverRows;
+      var seen={},serverQuizzes=0,localQuizzes=0;
+      serverRows.forEach(function(r){
+        if(r.kind==='quiz')serverQuizzes++;
+        else if(r.kind&&r.item_key)seen[r.kind+'|'+r.item_key]=true;
+      });
+      var merged=serverRows.slice();
+      localRows.forEach(function(r){
+        if(r.kind==='quiz'){localQuizzes++;if(localQuizzes>serverQuizzes)merged.push(r)}
+        else if(r.kind&&r.item_key&&!seen[r.kind+'|'+r.item_key]){seen[r.kind+'|'+r.item_key]=true;merged.push(r)}
+      });
+      return merged;
+    }
+    function sbRefreshProgress(){
+      if(!sbSession)return;
+      if(!sbProgressDirty&&sbLastProgressFetch&&Date.now()-sbLastProgressFetch<10000)return;
+      sbLeaderboardRows=null;
+      sbLoadMyProgress();
     }
     function sbCounts(rows){
       var lessons={},quizzes=0,checklists={},inspections={};
@@ -2070,7 +2098,7 @@
       meta.textContent='Signed in as '+sbSession.name+' · '+c.lessons+' of '+sbTotalLessons()+' lessons done';
     }
     function sbSignOut(){
-      sbSession=null;sbMyEvents=null;sbRecorded={};mpName=null;sbLeaderboardRows=null;
+      sbSession=null;sbMyEvents=null;sbRecorded={};mpName=null;sbLeaderboardRows=null;sbProgressDirty=false;sbLastProgressFetch=0;
       sbStore('qpfg_session',null);
       updateProgressCard();
       renderMyProgress();
@@ -2316,7 +2344,7 @@
       if(activeCategory==='Products'){
         var productCount=document.getElementById('browseCount');productCount.textContent=products.length+' product references';docList.className='product-list';
         var searchWrap=document.createElement('div');searchWrap.className='product-search-wrap';var searchIcon=document.createElementNS('http://www.w3.org/2000/svg','svg');searchIcon.setAttribute('class','product-search-icon');searchIcon.setAttribute('viewBox','0 0 24 24');searchIcon.setAttribute('fill','none');searchIcon.setAttribute('stroke','currentColor');searchIcon.setAttribute('stroke-width','2');searchIcon.setAttribute('aria-hidden','true');searchIcon.innerHTML='<circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path>';var productSearch=document.createElement('input');productSearch.type='search';productSearch.className='product-search';productSearch.autocomplete='off';productSearch.placeholder='Filter products by name…';productSearch.setAttribute('aria-label','Filter products by name');searchWrap.append(searchIcon,productSearch);docList.appendChild(searchWrap);
-        var productRows=[];products.forEach(function(item,index){var card=document.createElement('article');card.className='product-card';var toggle=document.createElement('button');toggle.type='button';toggle.className='product-toggle';toggle.setAttribute('aria-expanded','false');var fieldsId='product-fields-'+index;toggle.setAttribute('aria-controls',fieldsId);var name=document.createElement('span');name.textContent=item.name;var arrow=document.createElementNS('http://www.w3.org/2000/svg','svg');arrow.setAttribute('viewBox','0 0 24 24');arrow.setAttribute('fill','none');arrow.setAttribute('stroke','currentColor');arrow.setAttribute('stroke-width','2.5');arrow.setAttribute('aria-hidden','true');arrow.innerHTML='<path d="m9 18 6-6-6-6"></path>';var fields=document.createElement('dl');fields.className='product-fields';fields.id=fieldsId;item.fields.forEach(function(field){var row=document.createElement('div');row.className='product-field';var dt=document.createElement('dt');dt.textContent=field[0];var dd=document.createElement('dd');dd.textContent=field[1];row.append(dt,dd);fields.appendChild(row)});if(item.labelPdf){var labelRow=document.createElement('div');labelRow.className='product-field';var labelTerm=document.createElement('dt');labelTerm.textContent='Label';var labelDescription=document.createElement('dd');var labelLink=document.createElement('a');labelLink.className='product-label-link';labelLink.href=item.labelPdf;labelLink.target='_blank';labelLink.rel='noopener';labelLink.setAttribute('aria-label','Open Advion Ant Bait Station label PDF');labelLink.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6M8 13h8M8 17h6"></path></svg><span>Open label PDF</span>';labelDescription.appendChild(labelLink);labelRow.append(labelTerm,labelDescription);fields.appendChild(labelRow)}toggle.append(name,arrow);toggle.addEventListener('click',function(){var open=fields.classList.toggle('open');toggle.setAttribute('aria-expanded',open?'true':'false')});card.append(toggle,fields);docList.appendChild(card);productRows.push({name:item.name.toLowerCase(),node:card})});
+        var productRows=[];products.forEach(function(item,index){var card=document.createElement('article');card.className='product-card';var toggle=document.createElement('button');toggle.type='button';toggle.className='product-toggle';toggle.setAttribute('aria-expanded','false');var fieldsId='product-fields-'+index;toggle.setAttribute('aria-controls',fieldsId);var name=document.createElement('span');name.textContent=item.name;var arrow=document.createElementNS('http://www.w3.org/2000/svg','svg');arrow.setAttribute('viewBox','0 0 24 24');arrow.setAttribute('fill','none');arrow.setAttribute('stroke','currentColor');arrow.setAttribute('stroke-width','2.5');arrow.setAttribute('aria-hidden','true');arrow.innerHTML='<path d="m9 18 6-6-6-6"></path>';var fields=document.createElement('dl');fields.className='product-fields';fields.id=fieldsId;item.fields.forEach(function(field){var row=document.createElement('div');row.className='product-field';var dt=document.createElement('dt');dt.textContent=field[0];var dd=document.createElement('dd');dd.textContent=field[1];row.append(dt,dd);fields.appendChild(row)});if(item.labelUrl){var labelRow=document.createElement('div');labelRow.className='product-field';var labelTerm=document.createElement('dt');labelTerm.textContent='Label';var labelDescription=document.createElement('dd');var labelLink=document.createElement('a');labelLink.className='product-label-link';labelLink.href=item.labelUrl;labelLink.target='_blank';labelLink.rel='noopener';labelLink.setAttribute('aria-label','View label for '+item.name);labelLink.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6M8 13h8M8 17h6"></path></svg><span>View Label \u2197</span>';labelDescription.appendChild(labelLink);labelRow.append(labelTerm,labelDescription);fields.appendChild(labelRow)}toggle.append(name,arrow);toggle.addEventListener('click',function(){var open=fields.classList.toggle('open');toggle.setAttribute('aria-expanded',open?'true':'false')});card.append(toggle,fields);docList.appendChild(card);productRows.push({name:item.name.toLowerCase(),node:card})});
         var empty=document.createElement('p');empty.className='product-empty';empty.textContent='No products match that name.';empty.hidden=true;docList.appendChild(empty);productSearch.addEventListener('input',function(){var query=this.value.trim().toLowerCase(),visible=0;productRows.forEach(function(row){var show=!query||row.name.indexOf(query)>-1;row.node.hidden=!show;if(show)visible++});empty.hidden=visible!==0;productCount.textContent=query?visible+' of '+products.length+' product references':products.length+' product references'});return;
       }
       if(activeCategory==='Equipment'){
@@ -2328,12 +2356,25 @@
       list.forEach(function(x){var b=document.createElement('button');b.type='button';b.className='doc-row';var name=document.createElement('span');name.textContent=x.d.title;var arrow=document.createElementNS('http://www.w3.org/2000/svg','svg');arrow.setAttribute('width','20');arrow.setAttribute('height','20');arrow.setAttribute('viewBox','0 0 24 24');arrow.setAttribute('fill','none');arrow.setAttribute('stroke','currentColor');arrow.setAttribute('stroke-width','2.5');arrow.innerHTML='<path d="m9 18 6-6-6-6"></path>';b.append(name,arrow);b.addEventListener('click',function(){openDoc(x.i)});docList.appendChild(b)})
     }
     function makeChevron(){var arrow=document.createElementNS('http://www.w3.org/2000/svg','svg');arrow.setAttribute('width','20');arrow.setAttribute('height','20');arrow.setAttribute('viewBox','0 0 24 24');arrow.setAttribute('fill','none');arrow.setAttribute('stroke','currentColor');arrow.setAttribute('stroke-width','2.5');arrow.setAttribute('aria-hidden','true');arrow.innerHTML='<path d="m9 18 6-6-6-6"></path>';return arrow}
+    function scrollSectionToTop(anchor,extraOffset){
+      if(!anchor){window.scrollTo(0,0);return}
+      var header=document.querySelector('.site-header');
+      var offset=(header?header.offsetHeight:0)+(extraOffset||0)+8;
+      var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({top:Math.max(0,anchor.getBoundingClientRect().top+window.scrollY-offset),behavior:reduce?'auto':'smooth'});
+      if(!reduce)setTimeout(function(){var drift=anchor.getBoundingClientRect().top-offset;if(drift>6)window.scrollTo({top:Math.max(0,anchor.getBoundingClientRect().top+window.scrollY-offset),behavior:'instant'})},600);
+    }
+    function scrollLessonToTop(){
+      var card=document.querySelector('.reader-header')||document.getElementById('readerTitle');
+      var toolbar=document.querySelector('.reader-toolbar');
+      scrollSectionToTop(card,toolbar?toolbar.offsetHeight:0);
+    }
     function renderTrainingLibrary(){
       docList.className='doc-list';
       if(trainingModuleOpen<0||trainingModuleOpen>=trainingModules.length){
         var totalLessons=trainingModules.reduce(function(n,m){return n+m.lessons.length},0);
         document.getElementById('browseCount').textContent=trainingModules.length+' study modules · '+totalLessons+' lessons, plus quiz, flashcards and role-play practice. Pick a module to start studying.';
-        trainingModules.forEach(function(module,mi){var b=document.createElement('button');b.type='button';b.className='doc-row';var name=document.createElement('span');name.textContent=module.title;var meta=document.createElement('span');meta.className='training-row-meta';var count=document.createElement('span');count.className='training-count';count.textContent=module.lessons.length+' lesson'+(module.lessons.length===1?'':'s');meta.append(count,makeChevron());b.append(name,meta);b.addEventListener('click',function(){trainingModuleOpen=mi;renderTrainingLibrary();window.scrollTo(0,0)});docList.appendChild(b)});
+        trainingModules.forEach(function(module,mi){var b=document.createElement('button');b.type='button';b.className='doc-row';var name=document.createElement('span');name.textContent=module.title;var meta=document.createElement('span');meta.className='training-row-meta';var count=document.createElement('span');count.className='training-count';count.textContent=module.lessons.length+' lesson'+(module.lessons.length===1?'':'s');meta.append(count,makeChevron());b.append(name,meta);b.addEventListener('click',function(){trainingModuleOpen=mi;var anchorAt=docList.children.length;renderTrainingLibrary();scrollSectionToTop(docList.children[anchorAt])});docList.appendChild(b)});
         var toolsHeading=document.createElement('h3');toolsHeading.className='training-module-title';toolsHeading.textContent='Practice Tools';docList.appendChild(toolsHeading);
         var toolsHub=document.createElement('div');toolsHub.className='training-hub';
         [{title:'QUIZ MODE',copy:'Multiple choice — pest, safety, sales.',open:renderQuizMode},{title:'FLASHCARDS',copy:'Tap to flip. Review fast.',open:renderFlashcards},{title:'ROLE-PLAY PRACTICE',copy:'Simulated customer convos.',open:renderRolePlay}].forEach(function(tool){var card=document.createElement('button');card.type='button';card.className='training-tool-card';var title=document.createElement('strong');title.textContent=tool.title;var copy=document.createElement('span');copy.textContent=tool.copy;card.append(title,copy);card.addEventListener('click',tool.open);toolsHub.appendChild(card)});
@@ -2358,8 +2399,11 @@
       lesson.check.forEach(function(entry,qi){var wrap=document.createElement('div');wrap.className='training-check';var q=document.createElement('p');var qLabel=document.createElement('strong');qLabel.textContent='Q'+(qi+1)+'. ';q.append(qLabel,document.createTextNode(entry.q));wrap.appendChild(q);var distractors=(entry.wrong&&entry.wrong.length>=2)?entry.wrong.slice():lesson.check.filter(function(other,oi){return oi!==qi}).map(function(other){return other.a});var optionValues=shuffleCopy([entry.a].concat(distractors));var options=document.createElement('div');options.className='practice-options';var feedback=document.createElement('p');feedback.className='check-feedback';var explanation=document.createElement('div');explanation.className='quiz-answer';explanation.textContent=entry.a;var solved=false;optionValues.forEach(function(value){var option=document.createElement('button');option.type='button';option.className='practice-option';option.textContent=value;option.addEventListener('click',function(){if(solved)return;if(value===entry.a){solved=true;option.classList.add('correct');Array.prototype.forEach.call(options.children,function(node){node.disabled=true});feedback.textContent='';feedback.className='check-feedback';explanation.classList.add('visible');answeredChecks[qi]=true;if(Object.keys(answeredChecks).length>=lesson.check.length)trackProgress('lesson',sbLessonKey(module.title,lesson.title),lesson.title,{module:module.title})}else{option.classList.add('incorrect');option.disabled=true;feedback.textContent='Not quite — try again.';feedback.className='check-feedback bad'}});options.appendChild(option)});wrap.append(options,feedback,explanation);checkSection.appendChild(wrap)});
       body.appendChild(checkSection);
       if(!lesson.check.length)trackProgress('lesson',sbLessonKey(module.title,lesson.title),lesson.title,{module:module.title});
-      if(li<module.lessons.length-1){var next=document.createElement('button');next.type='button';next.className='quiz-toggle training-next';next.textContent='Next lesson: '+module.lessons[li+1].title;next.addEventListener('click',function(){trackProgress('lesson',sbLessonKey(module.title,lesson.title),lesson.title,{module:module.title});openTrainingLesson(mi,li+1)});body.appendChild(next)}
-      window.scrollTo(0,0);document.getElementById('backBtn').focus({preventScroll:true});
+      var lessonActions=document.createElement('div');lessonActions.className='training-actions';
+      var doneBtn=document.createElement('button');doneBtn.type='button';doneBtn.className='practice-btn';doneBtn.textContent='✓ Done with this lesson';doneBtn.addEventListener('click',function(){trackProgress('lesson',sbLessonKey(module.title,lesson.title),lesson.title,{module:module.title});trainingModuleOpen=mi;closeReader();requestAnimationFrame(function(){var rows=docList.querySelectorAll('.doc-row');scrollSectionToTop(rows[li]||docList.querySelector('.training-module-title'))})});lessonActions.appendChild(doneBtn);
+      if(li<module.lessons.length-1){var next=document.createElement('button');next.type='button';next.className='practice-btn secondary';next.textContent='Next lesson →';next.addEventListener('click',function(){trackProgress('lesson',sbLessonKey(module.title,lesson.title),lesson.title,{module:module.title});openTrainingLesson(mi,li+1)});lessonActions.appendChild(next)}
+      body.appendChild(lessonActions);
+      scrollLessonToTop();document.getElementById('backBtn').focus({preventScroll:true});
     }
     function shuffleCopy(items){var out=items.slice();for(var i=out.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),temp=out[i];out[i]=out[j];out[j]=temp}return out}
     function makeToolBack(){var back=document.createElement('button');back.type='button';back.className='practice-back';back.textContent='← Training Library';back.addEventListener('click',function(){document.getElementById('categoryTitle').textContent='TRAINING LIBRARY';trainingModuleOpen=-1;docList.replaceChildren();renderTrainingLibrary();window.scrollTo(0,0)});return back}
@@ -2683,7 +2727,9 @@
     function showView(view){
       reader.classList.remove('active');home.classList.add('hidden');categoryView.classList.remove('active');categoryView.classList.add('hidden');
       if(view==='Training Library'&&currentView!=='Training Library')trainingModuleOpen=-1;
+      if(view==='My Progress'&&sbSession)sbLeaderboardRows=null;
       if(view==='home'){home.classList.remove('hidden');currentView='home';setNav('home')}else{activeCategory=view;renderBrowse();categoryView.classList.remove('hidden');categoryView.classList.add('active');currentView=view;setNav(view)}
+      if(sbSession&&(view==='My Progress'||view==='home'||view==='Training Library'))sbRefreshProgress();
       window.scrollTo(0,0);
     }
     function closeReader(){reader.classList.remove('active');showView(returnView);window.scrollTo(0,returnScroll)}
@@ -2696,7 +2742,8 @@
     document.getElementById('pestCount').textContent=docs.filter(function(d){return d.category==='Pest Control'}).length+' guides';
     document.getElementById('wildCount').textContent=docs.filter(function(d){return d.category==='Wildlife'}).length+' guides';
     document.getElementById('myProgressCard').addEventListener('click',function(){showView('My Progress')});
-    window.addEventListener('online',function(){sbFlushQueue()});
+    window.addEventListener('online',function(){sbFlushQueue();sbRefreshProgress()});
+    document.addEventListener('visibilitychange',function(){if(!document.hidden){sbFlushQueue();sbRefreshProgress()}});
     updateProgressCard();
     if(sbSession){sbFlushQueue();sbLoadMyProgress()}
     showView('home');
