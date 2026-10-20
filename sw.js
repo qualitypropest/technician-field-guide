@@ -1,6 +1,6 @@
 // Technician Field Guide — offline service worker
 // Bump VERSION whenever the app content changes so phones pick up the new build.
-const VERSION = 'field-guide-v9';
+const VERSION = 'field-guide-v10';
 const CORE = [
   './',
   './index.html',
@@ -66,4 +66,3 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
-
