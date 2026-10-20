@@ -10,6 +10,7 @@ const CORE = [
   './apple-touch-icon.png'
 ];
 
+
 self.addEventListener('install', (event) => {
   event.waitUntil(\
     caches.open(VERSION)
@@ -17,6 +18,7 @@ self.addEventListener('install', (event) => {
       .then(() => self.skipWaiting())
   );
 });
+
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(\
@@ -26,9 +28,11 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
+
 
   // Page loads: serve the cached app instantly, refresh it in the background.
   if (req.mode === 'navigate') {
@@ -46,6 +50,7 @@ self.addEventListener('fetch', (event) => {
     );
     return;
   }
+
 
   // Everything else (icons, manifest): cache first, then network.
   event.respondWith(\
