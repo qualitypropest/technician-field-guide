@@ -62,7 +62,7 @@ self.addEventListener('fetch', (event) => {
           caches.open(VERSION).then((cache) => cache.put(req, copy));
         }
         return res;
-      })
+      });
     })
   );
 });
