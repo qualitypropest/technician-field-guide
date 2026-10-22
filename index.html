@@ -546,6 +546,14 @@
           </button>
         </div>
       </section>
+
+      <section class="progress-entry" aria-label="Office sign in">
+        <button class="progress-card" type="button" id="officeProgressCard">
+          <span class="category-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M4 21V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v15"></path><path d="M16 10h2.5A1.5 1.5 0 0 1 20 11.5V21"></path><path d="M2.5 21h19"></path><path d="M7.5 8h2M7.5 12h2M7.5 16h2M11.5 8h1M11.5 12h1M11.5 16h1"></path></svg></span>
+          <span class="progress-card-copy"><strong>Office Sign In</strong><span id="officeProgressMeta">Office staff</span></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </button>
+      </section>
     </div>
 
     <section id="categoryView" class="category-view" aria-labelledby="categoryTitle">
@@ -872,7 +880,7 @@
           'SDS ACCESS: the SDS for every product must be available in your truck and digitally.',
           'RESPIRATOR USE: use the right cartridge. Fit-tested. Replace per schedule.'
         ],check:[
-          {q:'A customer asks for a use the label doesn’t mention. What do you do?',a:'You don’t do it. If it’s not on the label, you don’t do it — period.',wrong:['You can do it if the customer signs off on it.','You can do it once, as long as you document it.','Ask the customer to check the SDS first.']},
+          {q:'A customer asks you to use a product in a way the label doesn’t mention. What do you do?',a:'You don’t do it. If it’s not on the label, you don’t do it — period.',wrong:['You can do it if the customer signs off on it.','You can do it once, as long as you document it.','Ask the customer to check the SDS first.']},
           {q:'Where must product SDSs be available?',a:'In your truck and digitally — for every product you carry.',wrong:['At the office only.','In the SDS binder at the shop, available on request.','Only digitally, on your phone.']},
           {q:'What are the three respirator rules?',a:'Use the right cartridge, be fit-tested, and replace cartridges per schedule.',wrong:['Use any cartridge, be fit-tested, and replace cartridges yearly.','Use the right cartridge, replace cartridges when breathing feels hard, no fit test needed.','Use the right cartridge, be fit-tested, and replace cartridges only when one is damaged.']},
           {q:'What is the standard PPE on every job?',a:'Eye protection, gloves, long sleeves, and closed-toe boots — plus a respirator when the label requires one.',wrong:['Eye protection, gloves, short sleeves, and work boots.','Eye protection, gloves, long sleeves, and closed-toe boots — plus a respirator on every job.','Gloves and a respirator on every job, regardless of the label.']}
@@ -2006,12 +2014,25 @@
     // ==== My Progress: technician sign-in & progress tracking (Supabase) ====
     var SB_URL='https://nbhkndetjaytevyzqsuh.supabase.co';
     var SB_KEY='sb_publishable_sT4OYqX5_H-GMiWWoDbpzQ_kSGEk8OD';
-    var SB_FALLBACK_NAMES=['Adrian Morocho','Andrew Aldaz','Angel Acosta','Brandon Horton','Esteban Santana','Gage Bracey','Hector Lima','Jim Horton','Jose Vallejo','Josh Renfroe','Michelle Horton','Patricia Kasday','Juan Cristosomo','Miguel Frias','Luis Espinal','Luis Sinchi','Mauricio Valladares'];
-    var sbSession=null,sbMyEvents=null,sbRecorded={},sbFlushing=false,sbLoadingProgress=false,sbNamesCache=null,mpName=null,mpMode='enter',sbLeaderboardRows=null,sbLoadingLeaderboard=false,sbProgressDirty=false,sbLastProgressFetch=0,sbEventSeq=0;
+    var SB_FALLBACK_NAMES=['Adrian Morocho','Andrew Aldaz','Angel Acosta','Brandon Horton','Esteban Santana','Gage Bracey','Hector Lima','Jim Horton','Jose Vallejo','Josh Renfroe','Juan Cristosomo','Miguel Frias','Luis Espinal','Luis Sinchi','Mauricio Valladares','Romano Graham'];
+    var SB_OFFICE_FALLBACK_NAMES=['Courtney Perrin','Gabriela Dos Santos','Julie Kasday','Laura Cavallaro','Michelle Horton','Patricia Kasday','Samantha Ross'];
+    var sbSession=null,sbMyEvents=null,sbRecorded={},sbFlushing=false,sbLoadingProgress=false,sbNamesCache=null,mpName=null,mpMode='enter',mpRole='tech',sbLeaderboardRows=null,sbLoadingLeaderboard=false,sbProgressDirty=false,sbLastProgressFetch=0,sbEventSeq=0,sbOfficeNamesCache=null,sbOfficeLeaderboardRows=null,sbLoadingOfficeLeaderboard=false;
     function sbStore(key,value){try{if(value===null)localStorage.removeItem(key);else localStorage.setItem(key,JSON.stringify(value))}catch(e){}}
     function sbRead(key){try{var v=localStorage.getItem(key);return v?JSON.parse(v):null}catch(e){return null}}
-    sbSession=sbRead('qpfg_session');
-    if(sbSession&&(!sbSession.name||!sbSession.token))sbSession=null;
+    var sbTechSlot=sbRead('qpfg_session');
+    if(sbTechSlot&&(!sbTechSlot.name||!sbTechSlot.token))sbTechSlot=null;
+    var sbOfficeSlot=sbRead('qpfg_office_session');
+    if(sbOfficeSlot&&(!sbOfficeSlot.name||!sbOfficeSlot.token))sbOfficeSlot=null;
+    sbSession=sbTechSlot||sbOfficeSlot;
+    var sbSessionRole=sbTechSlot?'tech':'office';
+    function sbQueueKey(){return sbSessionRole==='office'?'qpfg_office_queue':'qpfg_queue'}
+    function sbSetActiveRole(role){
+      var slot=role==='office'?sbOfficeSlot:sbTechSlot;
+      if(sbSessionRole===role&&sbSession===slot)return;
+      sbSessionRole=role;sbSession=slot;
+      sbMyEvents=null;sbRecorded={};sbProgressDirty=false;sbLastProgressFetch=0;sbLoadingProgress=false;
+      if(sbSession){sbFlushQueue();sbLoadMyProgress()}
+    }
     function sbRpc(fn,args){
       return fetch(SB_URL+'/rest/v1/rpc/'+fn,{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(args||{})}).then(function(res){
         if(!res.ok)throw new Error(fn+' failed ('+res.status+')');
@@ -2042,17 +2063,17 @@
         if(ok!==true)sbEnqueue(ev);
       },function(){sbEnqueue(ev)});
     }
-    function sbEnqueue(ev){var q=sbRead('qpfg_queue')||[];q.push(ev);sbStore('qpfg_queue',q)}
+    function sbEnqueue(ev){var q=sbRead(sbQueueKey())||[];q.push(ev);sbStore(sbQueueKey(),q)}
     function sbFlushQueue(){
       if(!sbSession||sbFlushing)return;
-      var q=sbRead('qpfg_queue')||[];
+      var q=sbRead(sbQueueKey())||[];
       if(!q.length)return;
       sbFlushing=true;
       (function next(i){
-        if(i>=q.length){sbStore('qpfg_queue',[]);sbFlushing=false;sbLoadMyProgress();return}
+        if(i>=q.length){sbStore(sbQueueKey(),[]);sbFlushing=false;sbLoadMyProgress();return}
         sbRpc('record_progress',{p_token:sbSession.token,p_kind:q[i].kind,p_item_key:q[i].item_key,p_item_label:q[i].item_label,p_detail:q[i].detail}).then(function(ok){
-          if(ok===true)next(i+1);else{sbStore('qpfg_queue',q.slice(i));sbFlushing=false}
-        },function(){sbStore('qpfg_queue',q.slice(i));sbFlushing=false});
+          if(ok===true)next(i+1);else{sbStore(sbQueueKey(),q.slice(i));sbFlushing=false}
+        },function(){sbStore(sbQueueKey(),q.slice(i));sbFlushing=false});
       })(0);
     }
     function sbLoadMyProgress(){
@@ -2068,6 +2089,7 @@
         if(sbEventSeq===seqAtStart)sbProgressDirty=false;
         updateProgressCard();
         if(currentView==='My Progress')renderMyProgress();
+        if(currentView==='Office Sign In')renderOfficeProgress();
         if(currentView==='Training Library')renderTrainingLibrary();
         if(sbEventSeq!==seqAtStart)setTimeout(function(){sbLoadMyProgress()},800);
       },function(){sbLoadingProgress=false});
@@ -2089,7 +2111,7 @@
     function sbRefreshProgress(){
       if(!sbSession)return;
       if(!sbProgressDirty&&sbLastProgressFetch&&Date.now()-sbLastProgressFetch<10000)return;
-      sbLeaderboardRows=null;
+      sbLeaderboardRows=null;sbOfficeLeaderboardRows=null;
       sbLoadMyProgress();
     }
     function sbCounts(rows){
@@ -2110,18 +2132,27 @@
     }
     function updateProgressCard(){
       var meta=document.getElementById('myProgressMeta');
-      if(!meta)return;
-      if(!sbSession){meta.textContent='Sign in to track your training';return}
-      var c=sbCounts(sbMyEvents);
-      meta.textContent='Signed in as '+sbSession.name+' · '+c.lessons+' of '+sbTotalLessons()+' lessons done';
+      if(meta){
+        var techSess=sbSessionRole==='tech'?sbSession:sbTechSlot;
+        if(!techSess)meta.textContent='Sign in to track your training';
+        else if(sbSessionRole==='tech'&&sbSession){var c=sbCounts(sbMyEvents);meta.textContent='Signed in as '+techSess.name+' · '+c.lessons+' of '+sbTotalLessons()+' lessons done'}
+        else meta.textContent='Signed in as '+techSess.name;
+      }
+      var ometa=document.getElementById('officeProgressMeta');
+      if(ometa){
+        var offSess=sbSessionRole==='office'?sbSession:sbOfficeSlot;
+        ometa.textContent=offSess?('Signed in as '+offSess.name):'Office staff';
+      }
     }
     function sbSignOut(){
-      sbSession=null;sbMyEvents=null;sbRecorded={};mpName=null;sbLeaderboardRows=null;sbProgressDirty=false;sbLastProgressFetch=0;
-      sbStore('qpfg_session',null);
+      if(sbSessionRole==='office'){sbOfficeSlot=null;sbStore('qpfg_office_session',null)}
+      else{sbTechSlot=null;sbStore('qpfg_session',null)}
+      sbSession=null;sbMyEvents=null;sbRecorded={};mpName=null;sbLeaderboardRows=null;sbOfficeLeaderboardRows=null;sbProgressDirty=false;sbLastProgressFetch=0;
       updateProgressCard();
-      renderMyProgress();
+      if(currentView==='Office Sign In')renderOfficeProgress();else renderMyProgress();
     }
-    function sbSubmitPin(name,pin,btn,err){
+    function sbSubmitPin(name,pin,btn,err,role){
+      role=role||'tech';
       btn.disabled=true;btn.textContent='Signing in…';
       sbRpc('claim_or_verify_pin',{p_name:name,p_pin:pin}).then(function(result){
         var token=null;
@@ -2132,12 +2163,14 @@
           err.textContent='That PIN didn’t match. If this is your first sign-in, use “Create your PIN” below instead.';
           btn.disabled=false;btn.textContent=mpMode==='create'?'Create PIN & sign in':'Sign in';return;
         }
-        sbSession={name:name,token:token};
-        sbStore('qpfg_session',sbSession);
+        var sess={name:name,token:token};
+        if(role==='office'){sbOfficeSlot=sess;sbStore('qpfg_office_session',sess)}
+        else{sbTechSlot=sess;sbStore('qpfg_session',sess)}
+        sbSession=sess;sbSessionRole=role;
         sbMyEvents=null;sbRecorded={};
         updateProgressCard();
         sbFlushQueue();
-        renderMyProgress();
+        if(role==='office')renderOfficeProgress();else renderMyProgress();
         sbLoadMyProgress();
       },function(){
         err.textContent='Couldn’t reach the server — check your connection and try again.';
@@ -2146,11 +2179,18 @@
     }
     function renderMyProgress(){
       docList.className='practice-wrap';
-      if(!sbSession){renderSignIn();return}
-      renderProgressDashboard();
+      if(!sbSession){renderSignIn('tech');return}
+      renderProgressDashboard('tech');
     }
-    function renderSignIn(){
-      document.getElementById('browseCount').textContent='Sign in to track your training, checklists and inspections. The rest of the guide works without signing in.';
+    function renderOfficeProgress(){
+      docList.className='practice-wrap';
+      if(!sbSession){renderSignIn('office');return}
+      renderProgressDashboard('office');
+    }
+    function renderSignIn(role){
+      role=role||'tech';mpRole=role;
+      var office=role==='office';
+      document.getElementById('browseCount').textContent=office?'Office staff — sign in for checklists and inspections.':'Sign in to track your training, checklists and inspections. The rest of the guide works without signing in.';
       docList.replaceChildren();
       var panel=document.createElement('section');panel.className='practice-panel';
       var meta=document.createElement('p');meta.className='practice-meta';meta.textContent='STEP 1 OF 2';
@@ -2158,28 +2198,30 @@
       var note=document.createElement('p');note.className='practice-note';note.textContent='Pick your name, then enter your 4-digit PIN.';
       panel.append(meta,heading,note);docList.appendChild(panel);
       var list=document.createElement('div');list.className='doc-list';
-      (sbNamesCache||SB_FALLBACK_NAMES).forEach(function(name){
+      ((office?sbOfficeNamesCache:sbNamesCache)||(office?SB_OFFICE_FALLBACK_NAMES:SB_FALLBACK_NAMES)).forEach(function(name){
         var b=document.createElement('button');b.type='button';b.className='doc-row';
         var span=document.createElement('span');span.textContent=name;
         b.append(span,makeChevron());
-        b.addEventListener('click',function(){mpName=name;mpMode='enter';renderPinStep()});
+        b.addEventListener('click',function(){mpName=name;mpMode='enter';renderPinStep(role)});
         list.appendChild(b);
       });
       docList.appendChild(list);
-      if(!sbNamesCache){
-        sbRpc('list_technician_names',{}).then(function(rows){
+      if(office?!sbOfficeNamesCache:!sbNamesCache){
+        sbRpc(office?'list_office_names':'list_technician_names',{}).then(function(rows){
           if(Array.isArray(rows)&&rows.length){
-            sbNamesCache=rows.map(function(r){return typeof r==='string'?r:(r.name||r.technician_name||'')}).filter(Boolean);
-            if(sbNamesCache.length&&currentView==='My Progress'&&!sbSession&&!mpName)renderSignIn();
+            var mapped=rows.map(function(r){return typeof r==='string'?r:(r.name||r.technician_name||'')}).filter(Boolean);
+            if(office)sbOfficeNamesCache=mapped;else sbNamesCache=mapped;
+            if(mapped.length&&currentView===(office?'Office Sign In':'My Progress')&&!sbSession&&!mpName)renderSignIn(role);
           }
         },function(){});
       }
     }
-    function renderPinStep(){
+    function renderPinStep(role){
+      role=role||mpRole||'tech';mpRole=role;
       document.getElementById('browseCount').textContent='Almost there — one quick PIN and your progress saves to your name.';
       docList.replaceChildren();docList.className='practice-wrap';
       var back=document.createElement('button');back.type='button';back.className='practice-back';back.textContent='← Pick a different name';
-      back.addEventListener('click',function(){mpName=null;renderSignIn()});
+      back.addEventListener('click',function(){mpName=null;renderSignIn(role)});
       docList.appendChild(back);
       var create=mpMode==='create';
       var panel=document.createElement('section');panel.className='practice-panel';
@@ -2200,16 +2242,17 @@
         var value=pin.value.replace(/\D/g,'');
         if(value.length!==4){err.textContent='Enter a 4-digit PIN.';return}
         if(create&&pin2.value.replace(/\D/g,'')!==value){err.textContent='The two PINs don’t match — try again.';return}
-        sbSubmitPin(mpName,value,submit,err);
+        sbSubmitPin(mpName,value,submit,err,role);
       });
       var toggle=document.createElement('button');toggle.type='button';toggle.className='mp-mode-toggle';
       toggle.textContent=create?'Already have a PIN? Sign in instead':'First time signing in? Create your PIN';
-      toggle.addEventListener('click',function(){mpMode=create?'enter':'create';renderPinStep()});
+      toggle.addEventListener('click',function(){mpMode=create?'enter':'create';renderPinStep(role)});
       panel.append(err,submit,toggle);
       docList.appendChild(panel);
       pin.focus();
     }
-    function renderProgressDashboard(){
+    function renderProgressDashboard(role){
+      role=role||'tech';
       document.getElementById('browseCount').textContent='Your saved training, checklist and inspection progress.';
       docList.replaceChildren();
       var panel=document.createElement('section');panel.className='practice-panel';
@@ -2225,7 +2268,7 @@
         var loading=document.createElement('p');loading.className='practice-note';loading.textContent='Loading your progress…';
         panel.appendChild(loading);
         sbLoadMyProgress();
-        renderLeaderboardSection();
+        renderLeaderboardSection(role);
         return;
       }
       var c=sbCounts(sbMyEvents);
@@ -2251,27 +2294,29 @@
       addList('Checklists completed',unique(byKind.checklist),function(r){return r.item_label||r.item_key});
       addList('Inspections completed',unique(byKind.inspection),function(r){return r.item_label||r.item_key});
       addList('Quizzes',byKind.quiz.slice().reverse(),function(r){var s=sbDetailScore(r.detail);var when=sbRowDate(r);return 'Training Quiz'+(s?' — '+s:'')+(when?' · '+sbFormatDate(when):'')});
-      renderLeaderboardSection();
+      renderLeaderboardSection(role);
     }
-    function renderLeaderboardSection(){
+    function renderLeaderboardSection(role){
+      var office=role==='office';
       var panel=document.createElement('section');panel.className='practice-panel';
       docList.appendChild(panel);
-      var meta=document.createElement('p');meta.className='practice-meta';meta.textContent='TEAM STANDINGS';
+      var meta=document.createElement('p');meta.className='practice-meta';meta.textContent=office?'OFFICE TEAM STANDINGS':'TEAM STANDINGS';
       var heading=document.createElement('h3');heading.className='practice-title';heading.textContent='Leaderboard';
       panel.append(meta,heading);
-      if(sbLeaderboardRows){buildLeaderboardList(panel,sbLeaderboardRows);return}
+      var cached=office?sbOfficeLeaderboardRows:sbLeaderboardRows;
+      if(cached){buildLeaderboardList(panel,cached);return}
       var loading=document.createElement('p');loading.className='practice-note';loading.textContent='Loading the leaderboard…';
       panel.appendChild(loading);
-      if(sbLoadingLeaderboard)return;
-      sbLoadingLeaderboard=true;
-      sbRpc('leaderboard',{p_token:sbSession.token}).then(function(rows){
-        sbLoadingLeaderboard=false;
+      if(office?sbLoadingOfficeLeaderboard:sbLoadingLeaderboard)return;
+      if(office)sbLoadingOfficeLeaderboard=true;else sbLoadingLeaderboard=true;
+      sbRpc(office?'office_leaderboard':'leaderboard',{p_token:sbSession.token}).then(function(rows){
+        if(office)sbLoadingOfficeLeaderboard=false;else sbLoadingLeaderboard=false;
         var usable=Array.isArray(rows)?rows.filter(function(r){return r&&(r.technician_name||r.name)}):[];
         if(!usable.length){if(loading.isConnected)loading.textContent='Leaderboard couldn’t load — check your connection, or open the Field Guide on your phone.';return}
-        sbLeaderboardRows=usable;
-        if(currentView==='My Progress'&&sbSession)renderMyProgress();
+        if(office)sbOfficeLeaderboardRows=usable;else sbLeaderboardRows=usable;
+        if(currentView===(office?'Office Sign In':'My Progress')&&sbSession){if(office)renderOfficeProgress();else renderMyProgress()}
       },function(){
-        sbLoadingLeaderboard=false;
+        if(office)sbLoadingOfficeLeaderboard=false;else sbLoadingLeaderboard=false;
         if(loading.isConnected)loading.textContent='Leaderboard couldn’t load — check your connection, or open the Field Guide on your phone.';
       });
     }
@@ -2318,6 +2363,7 @@
     function renderBrowse(){
       docList.replaceChildren();docList.className='doc-list';document.getElementById('categoryTitle').textContent=(activeCategory==='My Progress'?'Sign In':activeCategory).toUpperCase();
       if(activeCategory==='My Progress'){renderMyProgress();return}
+      if(activeCategory==='Office Sign In'){renderOfficeProgress();return}
       if(activeCategory==='Inspections'){
         document.getElementById('browseCount').textContent=inspections.length+' inspection checklists';
         inspections.forEach(function(item,index){var b=document.createElement('button');b.type='button';b.className='doc-row';var name=document.createElement('span');name.textContent=item.title;var arrow=document.createElementNS('http://www.w3.org/2000/svg','svg');arrow.setAttribute('width','20');arrow.setAttribute('height','20');arrow.setAttribute('viewBox','0 0 24 24');arrow.setAttribute('fill','none');arrow.setAttribute('stroke','currentColor');arrow.setAttribute('stroke-width','2.5');arrow.innerHTML='<path d="m9 18 6-6-6-6"></path>';b.append(name,arrow);b.addEventListener('click',function(){openInspection(index)});docList.appendChild(b)});docs.forEach(function(d,di){if(d.category!=='Inspections')return;var b=document.createElement('button');b.type='button';b.className='doc-row';var name=document.createElement('span');name.textContent=d.title;var arrow=document.createElementNS('http://www.w3.org/2000/svg','svg');arrow.setAttribute('width','20');arrow.setAttribute('height','20');arrow.setAttribute('viewBox','0 0 24 24');arrow.setAttribute('fill','none');arrow.setAttribute('stroke','currentColor');arrow.setAttribute('stroke-width','2.5');arrow.innerHTML='<path d="m9 18 6-6-6-6"></path>';b.append(name,arrow);b.addEventListener('click',function(){openDoc(di)});docList.appendChild(b)});return;
@@ -2841,9 +2887,11 @@
     function showView(view){
       reader.classList.remove('active');home.classList.add('hidden');categoryView.classList.remove('active');categoryView.classList.add('hidden');
       if(view==='Training Library'&&currentView!=='Training Library')trainingModuleOpen=-1;
-      if(view==='My Progress'&&sbSession)sbLeaderboardRows=null;
+      if(view==='My Progress'){sbSetActiveRole('tech');if(sbSession)sbLeaderboardRows=null}
+      if(view==='Office Sign In'){sbSetActiveRole('office');if(sbSession)sbOfficeLeaderboardRows=null}
+      if(view==='home'){sbSetActiveRole(sbTechSlot?'tech':'office')}
       if(view==='home'){home.classList.remove('hidden');currentView='home';setNav('home')}else{activeCategory=view;renderBrowse();categoryView.classList.remove('hidden');categoryView.classList.add('active');currentView=view;setNav(view)}
-      if(sbSession&&(view==='My Progress'||view==='home'||view==='Training Library'))sbRefreshProgress();
+      if(sbSession&&(view==='My Progress'||view==='Office Sign In'||view==='home'||view==='Training Library'))sbRefreshProgress();
       window.scrollTo(0,0);
     }
     function closeReader(){reader.classList.remove('active');showView(returnView);window.scrollTo(0,returnScroll)}
@@ -2856,6 +2904,7 @@
     document.getElementById('pestCount').textContent=docs.filter(function(d){return d.category==='Pest Control'}).length+' guides';
     document.getElementById('wildCount').textContent=docs.filter(function(d){return d.category==='Wildlife'}).length+' guides';
     document.getElementById('myProgressCard').addEventListener('click',function(){showView('My Progress')});
+    document.getElementById('officeProgressCard').addEventListener('click',function(){showView('Office Sign In')});
     window.addEventListener('online',function(){sbFlushQueue();sbRefreshProgress()});
     document.addEventListener('visibilitychange',function(){if(!document.hidden){sbFlushQueue();sbRefreshProgress()}});
     updateProgressCard();
