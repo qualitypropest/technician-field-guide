@@ -464,7 +464,6 @@
     .sop-doc-title{font-family:"Barlow Condensed",sans-serif;font-size:1.25rem;margin:22px 0 0}
     .group-species-title{font-family:"Barlow Condensed",sans-serif;font-size:1.45rem;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
   </style>
-<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#10141b"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Field Guide"><meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
   <header class="site-header">
@@ -2927,6 +2926,9 @@
         radioGroups.forEach(function(g){g.choices.forEach(function(c){var on=state.radios[g.key]===c.value;c.node.classList.toggle('selected',on);c.node.setAttribute('aria-pressed',on?'true':'false')})});
         if(otherWrap)otherWrap.style.display=state.radios.vacuumRoute==='Other'?'':'none';
       }
+      var copyBtn=document.createElement('button');copyBtn.type='button';copyBtn.className='copy-jpg-btn';copyBtn.textContent='Copy form as JPG';body.appendChild(copyBtn);
+      var copyStatus=document.createElement('p');copyStatus.className='copy-status';copyStatus.hidden=true;body.appendChild(copyStatus);
+      copyBtn.addEventListener('click',function(){copyCleanoutAsJpg(state,copyStatus)});
       update();
     }
     function openPrepSheet(index){openGuideEntry(prepSheets[index],'pest','Prep Sheets')}
@@ -3093,7 +3095,7 @@
       });
       return sections;
     }
-    function drawInspectionCanvas(sections){
+    function drawInspectionCanvas(sections,headerText){
       var W=1080,PAD=56,CW=W-PAD*2;
       var F={header:'700 54px "Source Sans 3",Arial,sans-serif',section:'700 33px "Source Sans 3",Arial,sans-serif',subhead:'700 29px "Source Sans 3",Arial,sans-serif',item:'31px "Source Sans 3",Arial,sans-serif',detail:'27px "Source Sans 3",Arial,sans-serif',field:'31px "Source Sans 3",Arial,sans-serif'};
       var LH={header:66,section:44,subhead:40,item:44,detail:38,field:46};
@@ -3108,7 +3110,7 @@
         });
         return out.length?out:[''];
       }
-      var ops=[{kind:'header',lines:['QualityPro — Elevated Wildlife Inspection']}];
+      var ops=[{kind:'header',lines:[headerText||'QualityPro — Elevated Wildlife Inspection']}];
       sections.forEach(function(sec){
         ops.push({kind:'section',lines:wrap(sec.title,F.section,CW),mt:30});
         sec.lines.forEach(function(l){
@@ -3132,29 +3134,53 @@
       });
       return cv;
     }
-    function showJpgOverlay(url){
+    function showJpgOverlay(url,opts){
+      opts=opts||{};
       var overlay=document.createElement('div');overlay.className='jpg-overlay';
       var panel=document.createElement('div');panel.className='jpg-panel';
-      var h=document.createElement('h3');h.textContent='ELEVATED WILDLIFE INSPECTION IMAGE';
+      var h=document.createElement('h3');h.textContent=opts.overlayTitle||'ELEVATED WILDLIFE INSPECTION IMAGE';
       var p=document.createElement('p');p.textContent='Long-press the image to copy it or save it to Photos, then paste or attach it in the Gorilla Desk job notes. Or use Download JPG below.';
-      var img=document.createElement('img');img.src=url;img.alt='Completed Elevated Wildlife Inspection form summary';
+      var img=document.createElement('img');img.src=url;img.alt=opts.imageAlt||'Completed Elevated Wildlife Inspection form summary';
       var actions=document.createElement('div');actions.className='jpg-actions';
-      var dl=document.createElement('a');dl.className='jpg-download';dl.href=url;dl.download='elevated-wildlife-inspection.jpg';dl.textContent='Download JPG';
+      var dl=document.createElement('a');dl.className='jpg-download';dl.href=url;dl.download=opts.downloadName||'elevated-wildlife-inspection.jpg';dl.textContent='Download JPG';
       var close=document.createElement('button');close.type='button';close.className='jpg-close';close.textContent='Close';
       close.addEventListener('click',function(){overlay.remove()});
       overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.remove()});
       actions.append(dl,close);panel.append(h,p,img,actions);overlay.appendChild(panel);document.body.appendChild(overlay);
     }
+    function cleanoutSummarySections(state){
+      var f=state.fields,r=state.radios,sections=[];
+      function val(k){var v=f[k];return v&&String(v).trim()?String(v).trim():''}
+      var scope=[];
+      if(val('sqft'))scope.push({kind:'field',text:'Square footage of the area: '+val('sqft')+' sq. ft'});
+      if(val('insulationType'))scope.push({kind:'field',text:'Type of insulation (existing): '+val('insulationType')});
+      if(r.insulationAffected){scope.push({kind:'field',text:'Is the insulation affected? '+r.insulationAffected});scope.push({kind:'field',text:'Service type: '+(r.insulationAffected==='Yes'?'Attic Restoration':'Cleanout')})}
+      if(r.vacuumRoute){var route='Vacuum accessibility / route: '+r.vacuumRoute;if(r.vacuumRoute==='Other'&&val('vacuumRouteOther'))route+=' — '+val('vacuumRouteOther');scope.push({kind:'field',text:route})}
+      if(scope.length)sections.push({title:'Job Scope',lines:scope});
+      var repl=[];
+      if(val('replacementType'))repl.push({kind:'field',text:'Replacement insulation — Type: '+val('replacementType')});
+      if(val('replacementRValue'))repl.push({kind:'field',text:'Replacement insulation — R-value rating: '+val('replacementRValue')});
+      if(r.encapsulation)repl.push({kind:'field',text:'Encapsulation of the area: '+r.encapsulation});
+      if(repl.length)sections.push({title:'Replacement Insulation',lines:repl});
+      if(val('notes'))sections.push({title:'Notes',lines:[{kind:'field',text:val('notes')}]});
+      return sections;
+    }
     function copyInspectionAsJpg(state,statusEl){
-      var sections=inspectionSummaryLines(state);
+      copySectionsAsJpg(inspectionSummaryLines(state),statusEl,{emptyMessage:'Check at least one item first, then copy the form.'});
+    }
+    function copyCleanoutAsJpg(state,statusEl){
+      copySectionsAsJpg(cleanoutSummarySections(state),statusEl,{emptyMessage:'Answer at least one question first, then copy the form.',header:'QualityPro — Cleanout Inspection Proposal',overlayTitle:'CLEANOUT INSPECTION PROPOSAL IMAGE',downloadName:'cleanout-inspection-proposal.jpg',imageAlt:'Completed Cleanout Inspection — Proposal Form summary'});
+    }
+    function copySectionsAsJpg(sections,statusEl,opts){
+      opts=opts||{};
       statusEl.hidden=false;
-      if(!sections.length){statusEl.textContent='Check at least one item first, then copy the form.';return}
+      if(!sections.length){statusEl.textContent=opts.emptyMessage||'Fill in the form first, then copy it.';return}
       statusEl.textContent='Building image…';
-      var cv=drawInspectionCanvas(sections);
+      var cv=drawInspectionCanvas(sections,opts.header);
       cv.toBlob(function(jpgBlob){
         if(!jpgBlob){statusEl.textContent='Could not build the image — try again.';return}
         var url=URL.createObjectURL(jpgBlob);
-        function showImage(){statusEl.textContent='Image ready — long-press it to copy or save, or tap Download JPG.';showJpgOverlay(url)}
+        function showImage(){statusEl.textContent='Image ready — long-press it to copy or save, or tap Download JPG.';showJpgOverlay(url,opts)}
         function copied(){statusEl.textContent='Copied — paste the image into the Gorilla Desk job notes.'}
         function tryWrite(blob,type){
           return new Promise(function(resolve){
@@ -3427,6 +3453,5 @@
     window.addEventListener('hashchange',openInspectionFromLink);
   })();
   </script>
-<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(e){});});}</script>
 </body>
 </html>
