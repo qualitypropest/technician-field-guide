@@ -5,7 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#111111">
-  <link rel="icon" href="data:,">
+  <link rel="icon" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Field Guide">
   <title>Technician Field Guide</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
@@ -3452,6 +3457,15 @@
     openInspectionFromLink();
     window.addEventListener('hashchange',openInspectionFromLink);
   })();
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('sw.js').catch(function(err) {
+          console.warn('Service worker registration failed:', err);
+        });
+      });
+    }
   </script>
 </body>
 </html>
